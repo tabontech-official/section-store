@@ -7,7 +7,7 @@
 <div class="prapp-block" style="padding: {{ block.settings.padding_y }}px {{ block.settings.padding_x }}px;" data-product-id="{{ block.settings.product.id }}">
   <div class="prapp-summary">
     <div class="prapp-summary__header">
-      <h2 class="prapp-summary__headline">{{ block.settings.heading }} Video Slider Goes here</h2>
+      <h2 class="prapp-summary__headline">{{ block.settings.heading }} Count Down Timer</h2>
       {% if block.settings.allow_unverified_reviews %}
         {% if avg_rating > 0 %}
           <button type="button" class="prapp-summary__write-review">{{ block.settings.existing_reviews_action_text }}</button>
@@ -46,7 +46,7 @@
 
 {% schema %}
 {
-  "name": "Video Slider",
+  "name": "Countdown Timer",
   "target": "section",
   "stylesheet": "mysection.css",
   "javascript": "mysection.js",
@@ -60,7 +60,7 @@
       "id": "heading",
       "type": "text",
       "label": "product-reviews.settings.heading.label",
-      "default": "Payment Icons"
+      "default": "Timer Title goes here"
     },
 {
       "type": "select",
