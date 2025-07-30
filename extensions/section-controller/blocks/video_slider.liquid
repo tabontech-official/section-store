@@ -1,0 +1,109 @@
+<style>
+
+{{block.settings.cssfile}}
+
+</style>
+
+<div class="prapp-block" style="padding: {{ block.settings.padding_y }}px {{ block.settings.padding_x }}px;" data-product-id="{{ block.settings.product.id }}">
+  <div class="prapp-summary">
+    <div class="prapp-summary__header">
+      <h2 class="prapp-summary__headline">{{ block.settings.heading }} Video Slider Goes here</h2>
+      {% if block.settings.allow_unverified_reviews %}
+        {% if avg_rating > 0 %}
+          <button type="button" class="prapp-summary__write-review">{{ block.settings.existing_reviews_action_text }}</button>
+        {% else %}
+          <button type="button" class="prapp-summary__write-review">{{ block.settings.no_reviews_action_text }}</button>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+  {% if reviews != blank %}
+    <div class="prapp-review">
+      <ul class="prapp-review__list">
+        {% for key_value in reviews %}
+          {% assign review = key_value[1] %}
+          <li class="prapp-review__list-item">
+            {% assign rating = review.rating | plus: 0 %}
+            {% render "star-rating", rating: rating, fill: block.settings.stars_fill_color, size: block.settings.star_size %}
+            <h3 class="prapp-review__list-item-meta-headline">{{ review.title }}</h3>
+            <div>
+              <p>{{ review.body }}</p>
+            </div>
+            <div class="prapp-review__list-item-meta">
+              <p>
+                <b>{{ review.name }}</b>
+                on
+                <b>{{ review.created_at | date: "%b %d, %Y" }}</b>
+              </p>
+            </div>
+          </li>
+        {% endfor %}
+      </ul> 
+    </div>
+  {% endif %}
+</div>
+
+
+{% schema %}
+{
+  "name": "Video Slider",
+  "target": "section",
+  "stylesheet": "mysection.css",
+  "javascript": "mysection.js",
+  "settings": [
+
+  {
+        "type":"header",
+        "content":"Section Settings and Configuration"
+      },
+  {
+      "id": "heading",
+      "type": "text",
+      "label": "product-reviews.settings.heading.label",
+      "default": "Payment Icons"
+    },
+{
+      "type": "select",
+      "id": "sectionstyle",
+      "options": [
+        {
+          "value": "style1",
+          "label": "Style 1"
+        },
+        {
+          "value": "style2",
+          "label": "Style 2"
+        },
+         {
+          "value": "style3",
+          "label": "Style 3"
+        },
+        {
+          "value": "style4",
+          "label": "Style 4"
+        },
+        {
+          "value": "style5",
+          "label": "Style 5"
+        },
+      ],
+      "default": "style1",
+      "label": "Select your Style"
+    },
+
+
+
+        {
+      "id": "cssfile",
+     
+      "type": "html",
+    "label": "section CSS",
+      "default": ".prapp-summary\{background-color:green\;\n\ncolor:yellow;\}\n.abcmyself/{color:blue;\n\nfont-family:verdana/}",
+      "info": ".prapp-summary\{background-color:green\;\n\ncolor:yellow;\}\n.abcmyself\{color:blue;\n\nfont-family:verdana\}"
+    }
+ 
+ 
+    
+  ]
+}
+{% endschema %}
