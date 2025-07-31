@@ -7,7 +7,7 @@
 <div class="prapp-block" style="padding: {{ block.settings.padding_y }}px {{ block.settings.padding_x }}px;" data-product-id="{{ block.settings.product.id }}">
   <div class="prapp-summary">
     <div class="prapp-summary__header">
-      <h2 class="prapp-summary__headline">{{ block.settings.heading }} Count Down Timer</h2>
+      <h2 class="prapp-summary__headline">{{ block.settings.heading }}</h2>
       {% if block.settings.allow_unverified_reviews %}
         {% if avg_rating > 0 %}
           <button type="button" class="prapp-summary__write-review">{{ block.settings.existing_reviews_action_text }}</button>
@@ -34,11 +34,11 @@
                 <b>{{ review.name }}</b>
                 on
                 <b>{{ review.created_at | date: "%b %d, %Y" }}</b>
-              </p>   
+              </p>
             </div>
           </li>
         {% endfor %}
-      </ul> 
+      </ul>
     </div>
   {% endif %}
 </div>
@@ -46,12 +46,12 @@
 
 {% schema %}
 {
-  "name": "Countdown Timer",
+  "name": "Test block new",
   "target": "section",
   "stylesheet": "mysection.css",
   "javascript": "mysection.js",
   "settings": [
-    
+
   {
         "type":"header",
         "content":"Section Settings and Configuration"
@@ -60,7 +60,7 @@
       "id": "heading",
       "type": "text",
       "label": "product-reviews.settings.heading.label",
-      "default": "Timer Title goes here"
+      "default": "Payment Icons"
     },
 {
       "type": "select",
