@@ -46,7 +46,14 @@ const cardsPerPage = 4;
 const trendingProducts = [
   {
     title: "Trust box",
-    media: "https://miro.medium.com/v2/resize:fit:1200/0*coCNr5jfemOW1rq2.png",
+    mediaList: [
+      "https://miro.medium.com/v2/resize:fit:1200/0*coCNr5jfemOW1rq2.png",
+      "https://miro.medium.com/v2/resize:fit:1200/0*coCNr5jfemOW1rq2.png",
+
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+    ],
     type: "image",
     sectionHandle: "trending_slider",
     details: {
@@ -64,8 +71,15 @@ const trendingProducts = [
   },
   {
     title: "Payment icons",
-    media:
+
+    mediaList: [
       "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/buy_it_now.png?v=1753775517",
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/buy_it_now.png?v=1753775517",
+
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+    ],
     type: "image",
     sectionHandle: "payment_icons",
     description: "This section displays your payment options to customers.",
@@ -84,8 +98,14 @@ const trendingProducts = [
   },
   {
     title: "Testimonial #8",
-    media:
+    mediaList: [
       "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+      "https://miro.medium.com/v2/resize:fit:1200/0*coCNr5jfemOW1rq2.png",
+
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+    ],
     type: "image",
     sectionHandle: "testimonial_8",
     description: "Display customer testimonials to build trust.",
@@ -103,8 +123,15 @@ const trendingProducts = [
   },
   {
     title: "Product video",
-    media:
+
+    mediaList: [
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/video.png?v=1753775614",
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/buy_it_now.png?v=1753775517",
+
       "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+    ],
     type: "video",
     sectionHandle: "product_video",
     description: "Showcase a product demo or introduction video.",
@@ -122,8 +149,15 @@ const trendingProducts = [
   },
   {
     title: "Trust Badge",
-    media:
+
+    mediaList: [
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/video.png?v=1753775614",
       "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+    ],
     type: "image",
     sectionHandle: "trust_badge",
     description: "This section shows trust badges for your store.",
@@ -142,6 +176,14 @@ const trendingProducts = [
     title: "Shipping bar",
     media:
       "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+    mediaList: [
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/video.png?v=1753775614",
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png?v=1753775579",
+    ],
     type: "image",
     sectionHandle: "shipping_bar",
     details: {
@@ -165,10 +207,8 @@ export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState({});
   const cardRefs = useRef([]);
-  const handleModalOpen = (product) => {
-    setModalContent(product);
-    setShowModal(true);
-  };
+
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const handleModalClose = () => setShowModal(false);
 
@@ -257,7 +297,11 @@ export default function HomePage() {
 
     fetchStatuses();
   }, []);
-
+  const handleModalOpen = (product) => {
+    setModalContent(product);
+    setActiveImageIndex(0); // reset to first image
+    setShowModal(true);
+  };
   const toggleSectionStatus = async (sectionHandle) => {
     const selectedSection = trendingProducts.find(
       (p) => p.sectionHandle === sectionHandle,
@@ -348,178 +392,22 @@ export default function HomePage() {
 
       <div
         style={{
-          paddingInline: "var(--p-space-400)",
-          paddingBlock: "var(--p-space-300)",
-        }}
-      >
-        <div
-          style={{
-            background: "var(--p-color-bg-surface)",
-            paddingInline: "var(--p-space-400)",
-            paddingBlock: "var(--p-space-300)",
-            borderRadius: "var(--p-border-radius-400)",
-            border: "1px solid var(--p-color-border)",
-            boxShadow: "none",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--p-space-300)",
-            }}
-          >
-            {/* Search Input */}
-            <div style={{ width: "80%" }}>
-              <TextField
-                value={query}
-                onChange={setQuery}
-                placeholder="Search for sections"
-                autoComplete="off"
-                prefix={<Icon source={SearchIcon} tone="subdued" />}
-                borderless
-                clearButton
-              />
-            </div>
-
-            {/* Buttons aligned right */}
-            <div style={{ flex: 1, display: "flex", justifyContent: "end" }}>
-              <div style={{ display: "flex", gap: "var(--p-space-200)" }}>
-                <Button variant="tertiary" icon={FiArrowRight}>
-                  Build Your Bundle
-                </Button>
-                <Button variant="primary" icon={FilterIcon}>
-                  Categories
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div
-        style={{
-          position: "relative",
-          marginTop: "20px",
-          paddingInline: "var(--p-space-400)",
-          background: "transparent",
-        }}
-      >
-        <button
-          onClick={() => scroll("left")}
-          style={{
-            position: "absolute",
-            left: 0,
-            top: "50%",
-            transform: "translateY(-50%)",
-            zIndex: 2,
-            background: "transparent",
-            border: "1px solid #d1d1d1",
-            borderRadius: "50%",
-            width: "32px",
-            height: "32px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            color: "#000",
-          }}
-        >
-          <FiChevronLeft />
-        </button>
-
-        <button
-          onClick={() => scroll("right")}
-          style={{
-            position: "absolute",
-            right: 0,
-            top: "50%",
-            transform: "translateY(-50%)",
-            zIndex: 2,
-            background: "transparent",
-            border: "1px solid #d1d1d1",
-            borderRadius: "50%",
-            width: "32px",
-            height: "32px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            color: "#000",
-          }}
-        >
-          <FiChevronRight />
-        </button>
-
-        <div
-          ref={scrollRef}
-          style={{
-            overflowX: "auto",
-            display: "flex",
-            gap: "40px",
-            padding: "16px 32px",
-            background: "transparent",
-            scrollBehavior: "smooth",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-          }}
-          className="hide-scrollbar"
-        >
-          {iconItems.map((item, index) => (
-            <div
-              key={index}
-              style={{
-                textAlign: "center",
-                flex: "0 0 auto",
-                color: "#292929ff",
-                fontSize: "13px",
-                fontWeight: 500,
-              }}
-            >
-              <div style={{ marginBottom: "4px" }}>{item.icon}</div>
-              <div>{item.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div
-        style={{
           padding: "32px var(--p-space-400)",
-          position: "relative",
-          overflow: "hidden",
         }}
       >
         <Text variant="headingMd" fontWeight="semibold" as="h2">
-          Trending Now
+          Sections
         </Text>
-
-        {pageIndex > 0 && (
-          <button
-            onClick={() => setPageIndex((prev) => prev - 1)}
-            style={scrollButtonStyle("left")}
-          >
-            <FiChevronLeft />
-          </button>
-        )}
-        {pageIndex < maxPage - 1 && (
-          <button
-            onClick={() => setPageIndex((prev) => prev + 1)}
-            style={scrollButtonStyle("right")}
-          >
-            <FiChevronRight />
-          </button>
-        )}
 
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
+            gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
             gap: "20px",
             marginTop: "20px",
           }}
         >
-          {chunkedProducts[pageIndex]?.map((item, index) => (
+          {trendingProducts.map((item, index) => (
             <Card
               key={index}
               padding="0"
@@ -535,7 +423,7 @@ export default function HomePage() {
               >
                 {item.type === "image" ? (
                   <img
-                    src={item.media}
+                    src={item.mediaList?.[0] || item.media}
                     alt={item.title}
                     style={{
                       width: "100%",
@@ -546,7 +434,7 @@ export default function HomePage() {
                   />
                 ) : (
                   <video
-                    src={item.media}
+                    src={item.mediaList?.[0] || item.media}
                     muted
                     autoPlay
                     loop
@@ -583,195 +471,154 @@ export default function HomePage() {
           ))}
         </div>
       </div>
-      {showModal && (
-        <Modal
-          open={showModal}
-          onClose={handleModalClose}
-          title="Section Preview"
-          primaryAction={{
-            content: "Close",
-            onAction: handleModalClose,
-          }}
-          size="large" // You can use this if the modal provides it
-          style={{ maxWidth: "80vw", width: "80%" }} // Custom width style to increase modal width
-        >
-          <Modal.Section>
-            <div style={{ display: "flex" }}>
-              {/* Left Side Card for Image and Details */}
-              <div style={{ flex: 1, paddingRight: "20px" }}>
-                {/* Image Card */}
-                <Card sectioned>
-                  <img
-                    src={modalContent.media}
-                    alt={modalContent.title}
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Card>
 
-                {/* Gap Between Image and Details */}
-                <div style={{ marginBottom: "20px" }}></div>
+      <div style={{ padding: "32px" }}>
+        {showModal && (
+          <Modal
+            open={showModal}
+            onClose={handleModalClose}
+            title="Section Preview"
+            primaryAction={{
+              content: "Close",
+              onAction: handleModalClose,
+            }}
+            size="large"
+          >
+            <Modal.Section>
+              <div style={{ display: "flex", gap: "20px" }}>
+                {/* Left: Media + Details */}
+                <div style={{ flex: 1 }}>
+                  <Card sectioned>
+                    {modalContent.mediaList &&
+                      modalContent.mediaList.length > 0 && (
+                        <div
+                          style={{ position: "relative", textAlign: "center" }}
+                        >
+                          <img
+                            src={modalContent.mediaList[activeImageIndex]}
+                            alt={`Slide ${activeImageIndex + 1}`}
+                            style={{
+                              width: "100%",
+                              height: "auto",
+                              maxHeight: "300px",
+                              objectFit: "cover",
+                              borderRadius: "8px",
+                            }}
+                          />
 
-                {/* Details Card */}
-                <Card sectioned>
-                  <Text variant="headingSm" fontWeight="bold">
-                    Details:
-                  </Text>
-                  <Text
-                    variant="bodyMd"
-                    tone="subdued"
-                    style={{ marginTop: "8px" }}
-                  >
-                    <strong>Content:</strong> {modalContent.details?.content}
-                  </Text>
-                  <Text variant="bodyMd" tone="subdued">
-                    <strong>Positioning:</strong>{" "}
-                    {modalContent.details?.positioning}
-                  </Text>
-                  <Text variant="bodyMd" tone="subdued">
-                    <strong>Layout:</strong> {modalContent.details?.layout}
-                  </Text>
-                  <Text variant="bodyMd" tone="subdued">
-                    <strong>Text:</strong> {modalContent.details?.text}
-                  </Text>
-                  <Text variant="bodyMd" tone="subdued">
-                    <strong>Colors:</strong> {modalContent.details?.colors}
-                  </Text>
-                  <Text variant="bodyMd" tone="subdued">
-                    <strong>Spacing:</strong> {modalContent.details?.spacing}
-                  </Text>
-                  <Text variant="bodyMd" tone="subdued">
-                    <strong>Responsive Design:</strong>{" "}
-                    {modalContent.details?.responsiveDesign}
-                  </Text>
-                  <Text variant="bodyMd" tone="subdued">
-                    <strong>Custom Placement:</strong>{" "}
-                    {modalContent.details?.customPlacement}
-                  </Text>
-                </Card>
-              </div>
+                          {/* Prev Button */}
+                          {activeImageIndex > 0 && (
+                            <button
+                              onClick={() =>
+                                setActiveImageIndex((prev) => prev - 1)
+                              }
+                              style={sliderButtonStyle("left")}
+                            >
+                              ‹
+                            </button>
+                          )}
 
-              {/* Right Side Card for Monthly Charges */}
-              <div
-                style={{
-                  flex: 0.4,
-                  paddingLeft: "20px",
-                  minHeight: "400px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Card
-                  sectioned
-                  style={{
-                    flex: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text
-                    variant="headingSm"
-                    fontWeight="bold"
-                    style={{ marginBottom: "8px" }}
-                  >
-                    Section Store
-                  </Text>
+                          {/* Next Button */}
+                          {activeImageIndex <
+                            modalContent.mediaList.length - 1 && (
+                            <button
+                              onClick={() =>
+                                setActiveImageIndex((prev) => prev + 1)
+                              }
+                              style={sliderButtonStyle("right")}
+                            >
+                              ›
+                            </button>
+                          )}
+                        </div>
+                      )}
+                  </Card>
 
-                  {/* Text Content */}
-                  <div style={{ marginBottom: "20px" }}>
+                  <div style={{ marginTop: "16px" }}>
+                    <Card sectioned>
+                      <Text variant="headingSm" fontWeight="bold">
+                        Details:
+                      </Text>
+                      {Object.entries(modalContent.details || {}).map(
+                        ([key, val], idx) => (
+                          <Text
+                            key={idx}
+                            variant="bodyMd"
+                            tone="subdued"
+                            style={{ marginTop: "6px" }}
+                          >
+                            <strong>
+                              {key.charAt(0).toUpperCase() + key.slice(1)}:
+                            </strong>{" "}
+                            {val}
+                          </Text>
+                        ),
+                      )}
+                    </Card>
+                  </div>
+                </div>
+
+                {/* Right: Instructions */}
+                <div style={{ flex: 0.5 }}>
+                  <Card sectioned>
+                    <Text variant="headingSm" fontWeight="bold">
+                      How to Use This Section
+                    </Text>
                     <Text
                       variant="bodyMd"
                       tone="subdued"
-                      style={{ marginTop: "8px", marginBottom: "12px" }}
+                      style={{ marginTop: "12px", lineHeight: 1.6 }}
                     >
-                      You can use this app on a monthly subscription basis.
-                      Click below to view instructions on how to use the app
-                      blocks in your theme.
+                      1. Go to your Shopify Admin.
+                      <br />
+                      2. Open the theme editor and find the section where you'd
+                      like to add the app block.
+                      <br />
+                      3. Click on 'Add block' and select the block you want.
+                      <br />
+                      4. Customize the block as needed.
+                      <br />
+                      5. Save changes. Done!
                     </Text>
-                  </div>
 
-                  {/* Button with added margin */}
-                  <div>
-                    <Button
-                      onClick={openInstructionsModal}
-                      style={{ marginTop: "20px" }}
-                    >
-                      View Instructions
-                    </Button>
-                  </div>
-                </Card>
+                    <div style={{ marginTop: "20px" }}>
+                      <Button
+                        variant="primary"
+                        onClick={() =>
+                          window.open(
+                            "https://new-one-practice.myshopify.com/admin/themes/current/editor",
+                            "_blank",
+                          )
+                        }
+                      >
+                        Open Theme Editor
+                      </Button>
+                    </div>
+                  </Card>
+                </div>
               </div>
-            </div>
-          </Modal.Section>
-        </Modal>
-      )}
-
-      {/* Instructions Modal */}
-     {showInstructionsModal && (
-  <Modal
-    open={showInstructionsModal}
-    onClose={handleInstructionsModalClose}
-    title="Instructions"
-    primaryAction={{
-      content: "Close",
-      onAction: handleInstructionsModalClose,
-    }}
-  >
-    <Modal.Section>
-      <Card sectioned>
-        <Text variant="headingSm" fontWeight="bold">
-          How to Use App Blocks in Your Theme
-        </Text>
-        <Text variant="bodyMd" tone="subdued" style={{ marginTop: "12px" }}>
-          1. Go to your Shopify Admin.
-          <br />
-          2. Open the theme editor and find the section where you'd like to add the app block.
-          <br />
-          3. Click on 'Add block' and select the app block you want to add.
-          <br />
-          4. Customize the block content as needed and save your changes.
-          <br />
-          5. The app block will now render dynamically in the theme based on the settings you configured.
-        </Text>
-      </Card>
-
-      {/* Button to open Theme Customizer */}
-     <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-  <Button
-    onClick={() => window.open('https://new-one-practice.myshopify.com/admin/themes/current/editor', '_blank')}
-    variant="primary"
-  >
-    Demo
-  </Button>
-</div>
-
-    </Modal.Section>
-  </Modal>
-)}
-
+            </Modal.Section>
+          </Modal>
+        )}
+      </div>
     </>
   );
 }
 
-const scrollButtonStyle = (position) => ({
+const sliderButtonStyle = (position) => ({
   position: "absolute",
-  [position]: "0",
   top: "50%",
+  [position]: "10px",
   transform: "translateY(-50%)",
-  backgroundColor: "#fff",
-  border: "1px solid #e0e0e0",
+  fontSize: "24px",
+  background: "#fff",
+  border: "1px solid #ccc",
   borderRadius: "50%",
-  width: "36px",
-  height: "36px",
-  boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
+  width: "32px",
+  height: "32px",
   display: "flex",
-  justifyContent: "center",
   alignItems: "center",
+  justifyContent: "center",
   cursor: "pointer",
-  zIndex: 10,
+  zIndex: 1,
 });

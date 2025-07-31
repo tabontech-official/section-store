@@ -8,7 +8,9 @@ import {
   Button,
   Badge,
   Collapsible,
-  Icon
+  Icon,
+  MediaCard,
+  VideoThumbnail
 } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
 import { useState } from "react";
@@ -20,6 +22,8 @@ import {
   FiLifeBuoy,
   FiShuffle
 } from "react-icons/fi";
+
+import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
 
 export default function GuideLine() {
   const [openCollapse, setOpenCollapse] = useState(false);
@@ -60,94 +64,67 @@ export default function GuideLine() {
     
         <Layout>
 
-          {/* Quick Guide Section */}
-          <Layout.Section>
-            <Card>
-              <BlockStack gap="300">
-                <BlockStack gap="100" style={{ padding: "16px" }}>
-                  <Text variant="headingMd" fontWeight="bold">
-                    Quick Guide
-                  </Text>
-                  <Text tone="subdued">See how Section Store works like magic</Text>
-                </BlockStack>
+       <Layout.Section>
+    <MediaCard
+      title="How to Add Section?"
+      primaryAction={{
+        content: 'Watch now',
+        onAction: () => window.open('https://www.youtube.com/watch?v=exampleVideoId', '_blank'),
+      }}
+      description="See how Section Store works like magic. Learn how to add sections, blocks, and customize your Shopify theme easily."
+      popoverActions={[
+        { content: 'Dismiss', onAction: () => {} }
+      ]}
+    >
+      <VideoThumbnail
+        videoLength={127}
+        thumbnailUrl="https://burst.shopifycdn.com/photos/business-woman-smiling-in-office.jpg?width=1850"
+        onClick={() => window.open('https://www.youtube.com/watch?v=exampleVideoId', '_blank')}
+      />
+    </MediaCard>
 
-                <div style={{ padding: "0 16px" }}>
-                  <div style={{ position: "relative", borderRadius: "8px", overflow: "hidden" }}>
-                    <iframe
-                      width="100%"
-                      height="240"
-                      src="https://www.youtube.com/embed/exampleVideoId"
-                      title="How to Add Section?"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
+    {/* Collapsible Steps */}
+   <div style={{ borderTop: "1px solid #E3E3E3" }}>
+  <button
+    style={{
+      background: "none",
+      border: "none",
+      width: "100%",
+      textAlign: "left",
+      padding: "16px",
+      cursor: "pointer",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    }}
+    onClick={toggleCollapse}
+  >
+    <Text variant="bodyMd" fontWeight="medium">
+      Steps: How to Add Section?
+    </Text>
 
-                    <div style={{
-                      position: "absolute",
-                      top: "0",
-                      left: "0",
-                      width: "100%",
-                      height: "100%",
-                      background: "linear-gradient(to top, rgba(0,0,0,0.5), rgba(0,0,0,0))",
-                      display: "flex",
-                      alignItems: "flex-start",
-                      justifyContent: "center",
-                      flexDirection: "column",
-                      padding: "16px",
-                      color: "white"
-                    }}>
-                      <Badge status="info">Video Guide</Badge>
-                      <Text variant="headingMd" fontWeight="bold">
-                        How to Add Section?
-                      </Text>
-                      <div style={{ marginTop: "auto", display: "flex", alignItems: "center", gap: "4px" }}>
-                        <span
-                          style={{
-                            backgroundColor: "#000",
-                            color: "#fff",
-                            borderRadius: "4px",
-                            padding: "2px 8px",
-                            fontSize: "14px"
-                          }}
-                        >
-                          ▶ 2:07
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+    <span style={{ fontSize: "16px" }}>
+      {openCollapse ? <RiArrowDropUpLine />
+ : <RiArrowDropDownLine />
 
-                <div style={{ borderTop: "1px solid #E3E3E3" }}>
-                  <button
-                    style={{
-                      background: "none",
-                      border: "none",
-                      width: "100%",
-                      textAlign: "left",
-                      padding: "16px",
-                      cursor: "pointer"
-                    }}
-                    onClick={toggleCollapse}
-                  >
-                    <Text variant="bodyMd" fontWeight="medium">
-                      Steps: How to Add Section?
-                    </Text>
-                  </button>
-                  <Collapsible open={openCollapse}>
-                    <BlockStack gap="100" style={{ padding: "0 16px 16px 16px" }}>
-                      <Text tone="subdued">
-                        1. Open the Shopify Theme Editor from your Online Store.<br />
-                        2. Navigate to the template you want to edit.<br />
-                        3. Click "Add Section" or "Add Block", choose the section from our app.<br />
-                        4. Customize and Save your changes.
-                      </Text>
-                    </BlockStack>
-                  </Collapsible>
-                </div>
-              </BlockStack>
-            </Card>
-          </Layout.Section>
+}
+    </span>
+  </button>
+
+  <Collapsible open={openCollapse}>
+    <BlockStack gap="100" style={{ padding: "0 16px 16px 16px" }}>
+      <Text tone="subdued">
+        1. Open the Shopify Theme Editor from your Online Store.<br />
+        2. Navigate to the template you want to edit.<br />
+        3. Click "Add Section" or "Add Block", choose the section from our app.<br />
+        4. Customize and Save your changes.
+      </Text>
+    </BlockStack>
+  </Collapsible>
+</div>
+
+</Layout.Section>
+
 
           {/* Support Section */}
      <Layout.Section>
