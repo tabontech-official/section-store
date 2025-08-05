@@ -20,51 +20,51 @@ export default function HelpCenter() {
 
   useEffect(() => {
     const fetchFaqs = async () => {
-      // Sample FAQs - replace with real API later
       const sampleFaqs = [
-        {
-          id: "1",
-          title: "Can I try the section first?",
-          content:
-            "Yes, we have recently developed a feature for this. Navigate to the section you want and click ‘Try section’. Not all sections support this yet. Settings made during testing won’t carry over."
-        },
-        {
-          id: "2",
-          title: "Can I use this app with any Shopify theme?",
-          content:
-            "Yes! Our app blocks are compatible with all Shopify 2.0 themes. You can insert them anywhere using the theme editor."
-        },
-        {
-          id: "3",
-          title: "Do I need to know how to code?",
-          content:
-            "Not at all. Everything is drag-and-drop via Shopify's theme editor and our UI."
-        },
-        {
-          id: "4",
-          title: "Does this app slow down my store?",
-          content:
-            "No, our blocks are performance-optimized and lightweight."
-        },
-        {
-          id: "5",
-          title: "What if I don’t like a section I added?",
-          content:
-            "You can remove any app block from the theme editor anytime without affecting your store."
-        },
-        {
-          id: "6",
-          title: "Can I get a refund?",
-          content:
-            "Our app offers a 7-day free trial. If you experience issues, contact our support team to discuss your situation."
-        },
-        {
-          id: "7",
-          title: "Do app blocks show on all pages?",
-          content:
-            "No, you can control where each block shows using the Shopify theme editor. You have full flexibility."
-        }
-      ];
+  {
+    id: "1",
+    title: "Can I try the section before adding it?",
+    content:
+      "Yes, we’ve added a preview feature. You can preview the section before adding it to your theme. Note that not all sections support live preview yet."
+  },
+  {
+    id: "2",
+    title: "Is this app compatible with all Shopify themes?",
+    content:
+      "Yes! Our app installs 2.0-compatible section files which work with any Shopify Online Store 2.0 theme."
+  },
+  {
+    id: "3",
+    title: "Do I need to write code to use this app?",
+    content:
+      "No coding is required. Once a section is added to your theme, you can add it visually using Shopify's drag-and-drop theme editor."
+  },
+  {
+    id: "4",
+    title: "Will adding sections from this app slow down my store?",
+    content:
+      "No. Our sections are optimized for performance and follow Shopify's best practices for theme speed and structure."
+  },
+{
+  id: "5",
+  title: "How do I remove a section I don’t want?",
+  content:
+    "You can remove the section from your store's front end using the Shopify theme editor. However, the section file will still remain inside your theme code. To fully remove it, you would need to manually delete the Liquid file from your theme's code editor."
+},
+{
+  id: "6",
+  title: "Can I get a refund?",
+  content:
+    "Once a section is added to your theme, the file becomes part of your theme’s code and cannot be removed through the app. Due to this, refunds are not possible after a section has been installed. Please preview and test carefully before adding."
+},
+  {
+    id: "7",
+    title: "Will the sections appear on all pages by default?",
+    content:
+      "No. After adding the section to your theme, you choose where to place it using the Shopify theme editor. Nothing is added automatically to live pages."
+  }
+];
+
 
       await new Promise((res) => setTimeout(res, 500)); // simulate loading
       setFaqSections(sampleFaqs);

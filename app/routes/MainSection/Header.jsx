@@ -6,12 +6,12 @@ import {
   InlineGrid,
   TextField,
   Icon,
+  Page
 } from "@shopify/polaris";
 import { SearchIcon, FilterIcon } from "@shopify/polaris-icons";
 import { useState, useRef } from "react";
 import { MdTab } from "react-icons/md";
 
-// ✅ React Icons Imports
 import {
   AiFillStar,
   AiOutlineFire,
@@ -132,7 +132,8 @@ export default function PromoBanner() {
 const trendingScrollRef = useRef(null);
 
   return (
-    <>
+    <Page>
+
       <div style={{ padding: "var(--p-space-400)" }}>
         <Card
           padding="2"
@@ -156,11 +157,11 @@ const trendingScrollRef = useRef(null);
                   Bonus feature: Buy sections for another store — great for
                   working with dev stores.
                 </Text>
-                <div>
+                {/* <div>
                   <Button tone="success" variant="primary">
                     Build your bundle now
                   </Button>
-                </div>
+                </div> */}
               </BlockStack>
             </div>
 
@@ -211,8 +212,7 @@ const trendingScrollRef = useRef(null);
               gap: "var(--p-space-300)",
             }}
           >
-            {/* Search Input */}
-            <div style={{ width: "80%" }}>
+            <div style={{ width: "70%" }}>
               <TextField
                 value={query}
                 onChange={setQuery}
@@ -224,7 +224,6 @@ const trendingScrollRef = useRef(null);
               />
             </div>
 
-            {/* Buttons aligned right */}
             <div style={{ flex: 1, display: "flex", justifyContent: "end" }}>
               <div style={{ display: "flex", gap: "var(--p-space-200)" }}>
                 <Button variant="tertiary" icon={FiArrowRight}>
@@ -327,6 +326,6 @@ const trendingScrollRef = useRef(null);
 
  
 
-    </>
+    </Page>
   );
 }

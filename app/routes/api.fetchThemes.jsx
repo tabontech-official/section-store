@@ -1,5 +1,5 @@
-import { json } from "@remix-run/node"; // or use express' res.json() if using Express
-import { authenticate } from "../shopify.server"; // update based on your app auth setup
+import { json } from "@remix-run/node";
+import { authenticate } from "../shopify.server"; 
 
 export async function loader({ request }) {
   const { admin } = await authenticate.admin(request);

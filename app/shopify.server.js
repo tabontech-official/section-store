@@ -9,7 +9,9 @@ import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prism
 import prisma from "./db.server";
 
 export const MONTHLY_PLAN="Monthly subscription"
-
+export const STARTER_PLAN = "Starter Plan"; // Free
+export const BASIC_PLAN = "Basic Plan";
+export const UNLIMITED_PLAN = "Unlimited Plan";
 
 const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,
@@ -20,14 +22,22 @@ const shopify = shopifyApp({
   authPathPrefix: "/auth",
   sessionStorage: new PrismaSessionStorage(prisma),
   distribution: AppDistribution.AppStore,
-  billing:{
-[MONTHLY_PLAN]:{
-  amount:5,
-  currencyCode:"USD",
-  interval:BillingInterval.Every30Days,
-  trialDays:14,
-}
+  billing: {
+    [BASIC_PLAN]: {
+      amount: 5,
+      currencyCode: "USD",
+      interval: BillingInterval.Every30Days,
+      trialDays: 7,
+    },
+    [UNLIMITED_PLAN]: {
+      amount: 15,
+      currencyCode: "USD",
+      interval: BillingInterval.Every30Days,
+      trialDays: 14,
+    },
+    // Starter is free so not listed here as it's considered a default/no billing case
   },
+  
   future: {
     unstable_newEmbeddedAuthStrategy: true,
     removeRest: true,
@@ -42,6 +52,8 @@ export const apiVersion = ApiVersion.January25;
 export const addDocumentResponseHeaders = shopify.addDocumentResponseHeaders;
 export const authenticate = shopify.authenticate;
 export const unauthenticated = shopify.unauthenticated;
+export const billing = shopify.billing;
+
 export const login = shopify.login;
 export const registerWebhooks = shopify.registerWebhooks;
 export const sessionStorage = shopify.sessionStorage;

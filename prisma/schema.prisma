@@ -40,3 +40,22 @@ model SectionStatus {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
+
+model Shop {
+  id             String   @id @default(cuid())
+  shop           String   @unique
+  accessToken    String
+  planName       String   @default("Starter")
+  subscriptionId String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+
+model ThemeSection {
+  id            String   @id @default(cuid())
+  shop          String   // Store domain (e.g., mystore.myshopify.com)
+  sectionTitle  String
+  imageUrl      String
+  addedAt       DateTime @default(now())
+}
