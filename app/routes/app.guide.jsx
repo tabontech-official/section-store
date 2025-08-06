@@ -11,6 +11,8 @@ import {
   Icon,
   MediaCard,
   VideoThumbnail,
+  Loading,
+  Frame,
 } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
 import { useState } from "react";
@@ -37,7 +39,10 @@ export default function GuideLine() {
   const toggleCollapse = () => setOpenCollapse(!openCollapse);
 
   return (
+    <Frame>
     <Page fullWidth>
+            <Loading />
+      
       <TitleBar title="Guide" />
 
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
@@ -92,53 +97,58 @@ export default function GuideLine() {
             </MediaCard>
 
             {/* Collapsible Steps */}
-           <div style={{ borderTop: "1px solid #E3E3E3" }}>
-  <button
-    style={{
-      background: "none",
-      border: "none",
-      width: "100%",
-      textAlign: "left",
-      padding: "16px",
-      cursor: "pointer",
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-    }}
-    onClick={toggleCollapse}
-  >
-    <Text variant="bodyMd" fontWeight="medium">
-      Steps: How to Add Section?
-    </Text>
+            <div style={{ borderTop: "1px solid #E3E3E3" }}>
+              <button
+                style={{
+                  background: "none",
+                  border: "none",
+                  width: "100%",
+                  textAlign: "left",
+                  padding: "16px",
+                  cursor: "pointer",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+                onClick={toggleCollapse}
+              >
+                <Text variant="bodyMd" fontWeight="medium">
+                  Steps: How to Add Section?
+                </Text>
 
-    <span style={{ fontSize: "16px" }}>
-      {openCollapse ? <RiArrowDropUpLine /> : <RiArrowDropDownLine />}
-    </span>
-  </button>
+                <span style={{ fontSize: "16px" }}>
+                  {openCollapse ? (
+                    <RiArrowDropUpLine />
+                  ) : (
+                    <RiArrowDropDownLine />
+                  )}
+                </span>
+              </button>
 
-  <Collapsible open={openCollapse}>
-    <BlockStack gap="100" style={{ padding: "0 16px 16px 16px" }}>
-      <Text tone="subdued">
-        1. Go to your Shopify Admin → Online Store → Themes.
-        <br />
-        2. Click on “Customize” for your current theme.
-        <br />
-        3. Navigate to the page where you want the section to appear.
-        <br />
-        4. Click “Add section” from the left sidebar.
-        <br />
-        5. Look for the section you just added via our app.
-        <br />
-        6. Select it, customize as needed, and hit “Save”.
-        <br />
-        <br />
-         This section has been directly installed in your theme as a
-        <strong> full section file</strong>. No block or manual coding is needed.
-      </Text>
-    </BlockStack>
-  </Collapsible>
-</div>
-
+              <Collapsible open={openCollapse}>
+                <BlockStack gap="100" style={{ padding: "0 16px 16px 16px" }}>
+                  <Text tone="subdued">
+                    1. Go to your Shopify Admin → Online Store → Themes.
+                    <br />
+                    2. Click on “Customize” for your current theme.
+                    <br />
+                    3. Navigate to the page where you want the section to
+                    appear.
+                    <br />
+                    4. Click “Add section” from the left sidebar.
+                    <br />
+                    5. Look for the section you just added via our app.
+                    <br />
+                    6. Select it, customize as needed, and hit “Save”.
+                    <br />
+                    <br />
+                    This section has been directly installed in your theme as a
+                    <strong> full section file</strong>. No block or manual
+                    coding is needed.
+                  </Text>
+                </BlockStack>
+              </Collapsible>
+            </div>
           </Layout.Section>
 
           <Layout.Section>
@@ -195,5 +205,6 @@ export default function GuideLine() {
         </Layout>
       </div>
     </Page>
+    </Frame>
   );
 }

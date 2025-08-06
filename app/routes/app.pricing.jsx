@@ -258,6 +258,8 @@ import {
   Text,
   Button,
   Badge,
+  Frame,
+  Loading,
 } from "@shopify/polaris";
 import db from "../db.server";
 
@@ -346,6 +348,8 @@ export default function PricingPage() {
   ];
 
   return (
+    <Frame>
+      <Loading/>
     <Page title="Choose Your Plan">
       <Text variant="headingMd">
         Current Plan:{" "}
@@ -404,5 +408,6 @@ export default function PricingPage() {
         ))}
       </div>
     </Page>
+    </Frame>
   );
 }

@@ -8,9 +8,11 @@ import {
   Page,
   Toast,
   Frame,
+  Loading,
 } from "@shopify/polaris";
 import { FiEye } from "react-icons/fi";
 import { CreditCardIcon, LockIcon, ViewIcon } from "@shopify/polaris-icons";
+import { useNavigate } from "@remix-run/react";
 
 const newestProducts = [
   {
@@ -222,6 +224,7 @@ export default function NewestSlider() {
     setModalContent({});
     setActiveImageIndex(0);
   };
+const navigate = useNavigate();
 
   const handleSave = async () => {
     try {
@@ -240,6 +243,7 @@ export default function NewestSlider() {
         setShowToast(true);
         setShowModal(false);
         setAddedTitles((prev) => [...prev, modalContent?.title]);
+          navigate("/app/my-section");
       } else {
         setToastMessage(data.error || " Something went wrong");
         setShowToast(true);
@@ -251,9 +255,12 @@ export default function NewestSlider() {
     }
   };
 
+
   return (
     <Frame>
       <Page>
+      <Loading />
+
         <div
           style={{ padding: "32px var(--p-space-400)", position: "relative" }}
         >

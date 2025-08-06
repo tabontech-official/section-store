@@ -5,7 +5,9 @@ import {
   Text,
   BlockStack,
   Collapsible,
-  Badge
+  Badge,
+  Frame,
+  Loading
 } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
 import { useState, useEffect } from "react";
@@ -74,6 +76,8 @@ export default function HelpCenter() {
   }, []);
 
   return (
+    <Frame>
+      <Loading/>
     <Page fullWidth>
       <TitleBar title="Help Center" />
 
@@ -146,5 +150,6 @@ export default function HelpCenter() {
         </Layout>
       </div>
     </Page>
+    </Frame>
   );
 }

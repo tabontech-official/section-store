@@ -11,6 +11,9 @@ import {
   Card,
   InlineStack,
   Toast,
+  Loading,
+  Banner,
+  Link,
 } from "@shopify/polaris";
 import {
   EmailIcon,
@@ -25,6 +28,9 @@ export default function SectionDashboard() {
   const [plan, setPlan] = useState("Starter");
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [showBanner, setShowBanner] = useState(false);
+  const [bannerMessage, setBannerMessage] = useState("");
+  const [bannerLink, setBannerLink] = useState("");
 
   useEffect(() => {
     fetch("/api/fetchaddedSection")
@@ -56,11 +62,17 @@ export default function SectionDashboard() {
     const data = await res.json();
 
     if (res.status === 403) {
-      setToastMessage(" Limit reached: Upgrade your plan in Pricing.");
-      setShowToast(true);
+      setBannerMessage(
+        "You’ve reached your section limit. Please upgrade your plan.",
+      );
+      setBannerLink("/app/pricing");
+      setShowBanner(true);
+      setShowToast(false);
     } else if (res.status === 409) {
-      setToastMessage(" This section is already added.");
-      setShowToast(true);
+      setBannerMessage("This section is already added to your theme.");
+      setBannerLink("");
+      setShowBanner(true);
+      setShowToast(false);
     } else if (data.success) {
       setToastMessage(" Section added to theme successfully!");
       setShowToast(true);
@@ -72,7 +84,31 @@ export default function SectionDashboard() {
 
   return (
     <Frame>
+      <Loading />
+
       <Page>
+        {showBanner && (
+          <Banner
+            title="Section Notice"
+            status="warning"
+            onDismiss={() => {
+              setShowBanner(false);
+              setBannerMessage("");
+              setBannerLink("");
+            }}
+          >
+            <p>
+              {bannerMessage}
+              {bannerLink && (
+                <>
+                  {" "}
+                  <Link url={bannerLink}>Upgrade your plan</Link>
+                </>
+              )}
+            </p>
+          </Banner>
+        )}
+
         <div
           style={{
             maxWidth: "940px",
