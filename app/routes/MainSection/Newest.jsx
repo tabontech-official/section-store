@@ -252,13 +252,16 @@ export default function NewestSlider() {
   };
 
   return (
-    <Page>
-      <div style={{ padding: "32px var(--p-space-400)", position: "relative" }}>
-        <Text variant="headingSm" as="h3" fontWeight="semibold">
-          Animated Sections
-        </Text>
-        <style>
-          {`
+    <Frame>
+      <Page>
+        <div
+          style={{ padding: "32px var(--p-space-400)", position: "relative" }}
+        >
+          <Text variant="headingSm" as="h3" fontWeight="semibold">
+            Animated Sections
+          </Text>
+          <style>
+            {`
     .hover-card-media {
       position: relative;
       height: 180px;
@@ -298,196 +301,200 @@ export default function NewestSlider() {
       transform: scale(1.05);
     }
   `}
-        </style>
+          </style>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "20px",
-            marginTop: "24px",
-          }}
-        >
-          {newestProducts.map((item, idx) => (
-            <Card
-              key={idx}
-              padding="0"
-              style={{
-                borderRadius: "12px",
-                overflow: "hidden",
-                background: "#fff",
-                border: "1px solid #ddd",
-                height: "260px",
-                cursor: "pointer",
-                position: "relative",
-                transition: "transform 0.3s ease",
-              }}
-            >
-              <div
-                className="card-click-wrapper"
-                onClick={() => openPreview(item)}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: "20px",
+              marginTop: "24px",
+            }}
+          >
+            {newestProducts.map((item, idx) => (
+              <Card
+                key={idx}
+                padding="0"
                 style={{
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                  background: "#fff",
+                  border: "1px solid #ddd",
+                  height: "260px",
+                  cursor: "pointer",
+                  position: "relative",
+                  transition: "transform 0.3s ease",
                 }}
               >
-                <div className="hover-card-media">
-                  {item.type === "image" ? (
-                    <img src={item.media} alt={item.title} />
-                  ) : (
-                    <video src={item.media} muted autoPlay loop playsInline />
-                  )}
-                  <div className="hover-overlay-button">
-                    <Button
-                      icon={ViewIcon}
+                <div
+                  className="card-click-wrapper"
+                  onClick={() => openPreview(item)}
+                  style={{
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <div className="hover-card-media">
+                    {item.type === "image" ? (
+                      <img src={item.media} alt={item.title} />
+                    ) : (
+                      <video src={item.media} muted autoPlay loop playsInline />
+                    )}
+                    <div className="hover-overlay-button">
+                      <Button
+                        icon={ViewIcon}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openPreview(item);
+                        }}
+                      >
+                        View details
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      padding: "12px 16px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      flexGrow: 1,
+                    }}
+                  >
+                    <Text variant="bodySm" fontWeight="medium">
+                      {item.title}
+                    </Text>
+                    <Text
+                      variant="bodySm"
+                      fontWeight="medium"
+                      color="interactive"
                       onClick={(e) => {
                         e.stopPropagation();
                         openPreview(item);
                       }}
+                      style={{ cursor: "pointer" }}
                     >
-                      View details
-                    </Button>
+                      View
+                    </Text>
                   </div>
                 </div>
+              </Card>
+            ))}
+          </div>
 
-                <div
-                  style={{
-                    padding: "12px 16px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    flexGrow: 1,
-                  }}
-                >
-                  <Text variant="bodySm" fontWeight="medium">
-                    {item.title}
-                  </Text>
-                  <Text
-                    variant="bodySm"
-                    fontWeight="medium"
-                    color="interactive"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openPreview(item);
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    View
-                  </Text>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
+          {showModal && (
+            <Modal
+              open={showModal}
+              onClose={handleModalClose}
+              title="Section Preview"
+              primaryAction={{ content: "Close", onAction: handleModalClose }}
+              size="large"
+            >
+              <Modal.Section>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+                  <div style={{ flex: 1, minWidth: "300px" }}>
+                    <Card sectioned>
+                      <img
+                        src={modalContent.mediaList?.[activeImageIndex]}
+                        alt="Preview"
+                        style={{
+                          width: "100%",
+                          maxHeight: "300px",
+                          objectFit: "cover",
+                          borderRadius: "8px",
+                        }}
+                      />
+                    </Card>
 
-        {showModal && (
-          <Modal
-            open={showModal}
-            onClose={handleModalClose}
-            title="Section Preview"
-            primaryAction={{ content: "Close", onAction: handleModalClose }}
-            size="large"
-          >
-            <Modal.Section>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
-                <div style={{ flex: 1, minWidth: "300px" }}>
-                  <Card sectioned>
-                    <img
-                      src={modalContent.mediaList?.[activeImageIndex]}
-                      alt="Preview"
-                      style={{
-                        width: "100%",
-                        maxHeight: "300px",
-                        objectFit: "cover",
-                        borderRadius: "8px",
-                      }}
-                    />
-                  </Card>
-
-                  <Card sectioned style={{ marginTop: "20px" }}>
-                    <Text variant="headingSm" fontWeight="bold">
-                      Details:
-                    </Text>
-                    {Object.entries(modalContent.details || {}).map(
-                      ([key, val], idx) => (
-                        <Text
-                          key={idx}
-                          variant="bodyMd"
-                          tone="subdued"
-                          style={{ display: "block", marginTop: 6 }}
-                        >
-                          <strong>{key}:</strong> {val}
-                        </Text>
-                      ),
-                    )}
-                  </Card>
-                </div>
-
-                <div style={{ flex: 0.5, minWidth: "300px" }}>
-                  <Card>
-                    <div
-                      style={{
-                        padding: "20px",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "16px",
-                      }}
-                    >
-                      <Text variant="headingSm" fontWeight="semibold">
-                        {modalContent?.title}
+                    <Card sectioned style={{ marginTop: "20px" }}>
+                      <Text variant="headingSm" fontWeight="bold">
+                        Details:
                       </Text>
+                      {Object.entries(modalContent.details || {}).map(
+                        ([key, val], idx) => (
+                          <Text
+                            key={idx}
+                            variant="bodyMd"
+                            tone="subdued"
+                            style={{ display: "block", marginTop: 6 }}
+                          >
+                            <strong>{key}:</strong> {val}
+                          </Text>
+                        ),
+                      )}
+                    </Card>
+                  </div>
 
-                      <Button
-                        fullWidth
-                        variant="primary"
-                        icon={CreditCardIcon}
-                        disabled={addedTitles.includes(modalContent?.title)}
-                        onClick={handleSave}
-                      >
-                        {addedTitles.includes(modalContent?.title)
-                          ? "Added"
-                          : "Add Section"}
-                      </Button>
-
+                  <div style={{ flex: 0.5, minWidth: "300px" }}>
+                    <Card>
                       <div
                         style={{
+                          padding: "20px",
                           display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: "6px",
+                          flexDirection: "column",
+                          gap: "16px",
                         }}
                       >
-                        <Icon source={LockIcon} tone="base" />
-                        <Text variant="bodySm" tone="subdued">
-                          Secure payment through Shopify
+                        <Text variant="headingSm" fontWeight="semibold">
+                          {modalContent?.title}
+                        </Text>
+
+                        <Button
+                          fullWidth
+                          variant="primary"
+                          icon={CreditCardIcon}
+                          disabled={addedTitles.includes(modalContent?.title)}
+                          onClick={handleSave}
+                        >
+                          {addedTitles.includes(modalContent?.title)
+                            ? "Added"
+                            : "Add Section"}
+                        </Button>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "6px",
+                          }}
+                        >
+                          <Icon source={LockIcon} tone="base" />
+                          <Text variant="bodySm" tone="subdued">
+                            Secure payment through Shopify
+                          </Text>
+                        </div>
+
+                        <div
+                          style={{
+                            borderTop: "1px solid #eee",
+                            margin: "6px 0",
+                          }}
+                        />
+                        <Text variant="bodySm">No recurring fees</Text>
+                        <Text variant="bodySm">
+                          Lifetime access & free updates
+                        </Text>
+                        <Text variant="bodySm">
+                          Works with any Shopify theme
                         </Text>
                       </div>
-
-                      <div
-                        style={{ borderTop: "1px solid #eee", margin: "6px 0" }}
-                      />
-                      <Text variant="bodySm">No recurring fees</Text>
-                      <Text variant="bodySm">
-                        Lifetime access & free updates
-                      </Text>
-                      <Text variant="bodySm">Works with any Shopify theme</Text>
-                    </div>
-                  </Card>
+                    </Card>
+                  </div>
                 </div>
-              </div>
-            </Modal.Section>
-          </Modal>
-        )}
-        <Frame>
+              </Modal.Section>
+            </Modal>
+          )}
           {showToast && (
             <Toast
               content={toastMessage}
               onDismiss={() => setShowToast(false)}
             />
           )}
-        </Frame>
-      </div>
-    </Page>
+        </div>
+      </Page>
+    </Frame>
   );
 }

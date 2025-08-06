@@ -3,7 +3,7 @@
 client_id = "55a6062f245076f51654a65839944fbe"
 name = "Section-store"
 handle = "section-store-18"
-application_url = "https://suzuki-calculation-lies-intranet.trycloudflare.com"
+application_url = "https://laser-agreements-domains-which.trycloudflare.com"
 embedded = true
 
 [build]
@@ -26,7 +26,7 @@ api_version = "2025-07"
 scopes = "write_products,read_themes,write_themes"
 
 [auth]
-redirect_urls = ["https://suzuki-calculation-lies-intranet.trycloudflare.com/auth/callback", "https://suzuki-calculation-lies-intranet.trycloudflare.com/auth/shopify/callback", "https://suzuki-calculation-lies-intranet.trycloudflare.com/api/auth/callback"]
+redirect_urls = ["https://laser-agreements-domains-which.trycloudflare.com/auth/callback", "https://laser-agreements-domains-which.trycloudflare.com/auth/shopify/callback", "https://laser-agreements-domains-which.trycloudflare.com/api/auth/callback"]
 
 [pos]
 embedded = false

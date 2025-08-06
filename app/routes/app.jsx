@@ -48,18 +48,19 @@ export const loader = async ({ request }) => {
     }`);
 
     const result = await response.json();
-    const subscriptions = result?.data?.currentAppInstallation?.activeSubscriptions;
+    const subscriptions =
+      result?.data?.currentAppInstallation?.activeSubscriptions;
 
     if (!subscriptions || subscriptions.length === 0) {
       return new Response("No active subscriptions found.", { status: 404 });
     }
 
-    const matchingSub = subscriptions.find((sub) =>
-      sub.id.includes(chargeId)
-    );
+    const matchingSub = subscriptions.find((sub) => sub.id.includes(chargeId));
 
     if (!matchingSub) {
-      return new Response("Charge ID not found in subscriptions.", { status: 404 });
+      return new Response("Charge ID not found in subscriptions.", {
+        status: 404,
+      });
     }
 
     await db.shop.upsert({
@@ -100,13 +101,14 @@ export default function App() {
   return (
     <AppProvider isEmbeddedApp apiKey={apiKey}>
       <NavMenu>
-        <Link to="/app" rel="home">Home</Link>
-        <Link to="/app/my-section" >My Section</Link>
+        <Link to="/app" rel="home">
+          Home
+        </Link>
+        <Link to="/app/my-section">My Section</Link>
         <Link to="/app/guide">Guide</Link>
         <Link to="/app/help/center">Helpcenter</Link>
         <Link to="/app/pricing">Pricing</Link>
-                <Link to="/app/ai-agent">Aiagent</Link>
-
+        <Link to="/app/ai-agent">Aiagent</Link>
       </NavMenu>
       <Outlet />
     </AppProvider>
