@@ -224,7 +224,7 @@ export default function NewestSlider() {
     setModalContent({});
     setActiveImageIndex(0);
   };
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleSave = async () => {
     try {
@@ -243,7 +243,7 @@ const navigate = useNavigate();
         setShowToast(true);
         setShowModal(false);
         setAddedTitles((prev) => [...prev, modalContent?.title]);
-          navigate("/app/my-section");
+        navigate("/app/my-section");
       } else {
         setToastMessage(data.error || " Something went wrong");
         setShowToast(true);
@@ -255,11 +255,10 @@ const navigate = useNavigate();
     }
   };
 
-
   return (
     <Frame>
       <Page>
-      <Loading />
+        <Loading />
 
         <div
           style={{ padding: "32px var(--p-space-400)", position: "relative" }}
@@ -414,24 +413,25 @@ const navigate = useNavigate();
                         }}
                       />
                     </Card>
-
-                    <Card sectioned style={{ marginTop: "20px" }}>
-                      <Text variant="headingSm" fontWeight="bold">
-                        Details:
-                      </Text>
-                      {Object.entries(modalContent.details || {}).map(
-                        ([key, val], idx) => (
-                          <Text
-                            key={idx}
-                            variant="bodyMd"
-                            tone="subdued"
-                            style={{ display: "block", marginTop: 6 }}
-                          >
-                            <strong>{key}:</strong> {val}
-                          </Text>
-                        ),
-                      )}
-                    </Card>
+                    <div style={{ marginTop: "20px" }}>
+                      <Card sectioned>
+                        <Text variant="headingSm" fontWeight="bold">
+                          Details:
+                        </Text>
+                        {Object.entries(modalContent.details || {}).map(
+                          ([key, val], idx) => (
+                            <Text
+                              key={idx}
+                              variant="bodyMd"
+                              tone="subdued"
+                              style={{ display: "block", marginTop: 6 }}
+                            >
+                              <strong>{key}:</strong> {val}
+                            </Text>
+                          ),
+                        )}
+                      </Card>
+                    </div>
                   </div>
 
                   <div style={{ flex: 0.5, minWidth: "300px" }}>

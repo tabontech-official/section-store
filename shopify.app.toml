@@ -1,9 +1,9 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "55a6062f245076f51654a65839944fbe"
-name = "Sectify-Ai-Theme Builder"
+name = "Sectify - AI Theme Builder"
 handle = "sectify-ai-theme-builder"
-application_url = "https://tomorrow-moments-robin-temple.trycloudflare.com"
+application_url = "https://sectify-ai-theme-builder.fly.dev"
 embedded = true
 
 [build]
@@ -26,7 +26,11 @@ api_version = "2025-07"
 scopes = "write_products,read_themes,write_themes"
 
 [auth]
-redirect_urls = ["https://tomorrow-moments-robin-temple.trycloudflare.com/auth/callback", "https://tomorrow-moments-robin-temple.trycloudflare.com/auth/shopify/callback", "https://tomorrow-moments-robin-temple.trycloudflare.com/api/auth/callback"]
+redirect_urls = [
+  "https://sectify-ai-theme-builder.fly.dev/auth/callback",
+  "https://sectify-ai-theme-builder.fly.dev/auth/shopify/callback",
+  "https://sectify-ai-theme-builder.fly.dev/api/auth/callback"
+]
 
 [pos]
 embedded = false

@@ -1,0 +1,38 @@
+# fly.toml app configuration file generated for sectify-ai-theme-builder on 2025-08-07T15:55:41+05:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'sectify-ai-theme-builder'
+primary_region = 'fra'
+
+[build]
+
+[env]
+  PORT = '3000'
+  SCOPES = 'read_themes,write_products,write_themes'
+  SHOPIFY_API_KEY = '55a6062f245076f51654a65839944fbe'
+  SHOPIFY_APP_URL = 'https://sectify-ai-theme-builder.fly.dev'
+
+[processes]
+  app = 'node ./dbsetup.js npm run docker-start'
+
+[[mounts]]
+  source = 'data'
+  destination = '/data'
+  auto_extend_size_threshold = 80
+  auto_extend_size_increment = '1GB'
+  auto_extend_size_limit = '10GB'
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
