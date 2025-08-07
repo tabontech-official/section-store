@@ -198,7 +198,7 @@ export default function NewestSlider() {
       .then((data) => {
         const titles = data.map((section) => section.sectionHandle);
         console.log(titles);
-        setAddedTitles(titles);
+        setAddedTitles(titles)
       });
   }, []);
   useEffect(() => {
