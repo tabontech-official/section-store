@@ -28,8 +28,7 @@ scopes = "write_products,read_themes,write_themes"
 [auth]
 redirect_urls = [
   "https://sectify-ai-theme-builder.fly.dev/auth/callback",
-  "https://sectify-ai-theme-builder.fly.dev/auth/shopify/callback",
-  "https://sectify-ai-theme-builder.fly.dev/api/auth/callback"
+  
 ]
 
 [pos]
