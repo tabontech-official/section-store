@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Page,
   Text,
@@ -14,6 +14,9 @@ import {
   Loading,
   Banner,
   Link,
+  Popover,
+  ActionList,
+  Badge,
 } from "@shopify/polaris";
 import {
   EmailIcon,
@@ -31,15 +34,29 @@ export default function SectionDashboard() {
   const [showBanner, setShowBanner] = useState(false);
   const [bannerMessage, setBannerMessage] = useState("");
   const [bannerLink, setBannerLink] = useState("");
+  const [cardPopoverActiveIndex, setCardPopoverActiveIndex] = useState(null);
+
+  const [themes, setThemes] = useState([]);
+  const [themesLoading, setThemesLoading] = useState(false);
+  const [themesLoaded, setThemesLoaded] = useState(false);
+  const [addedToThemeIds, setAddedToThemeIds] = useState([]);
+  const [headerPopoverActive, setHeaderPopoverActive] = useState(false);
+  const [shopHandle, setShopHandle] = useState("");
 
   useEffect(() => {
     fetch("/api/fetchaddedSection")
       .then((res) => res.json())
-      .then((data) => setAddedSections(data || []));
+      .then((data) => {
+        setAddedSections(data || []);
+        // setAddedToThemeIds(data.map((s) => s.sectionHandle)); // mark already-added
+      });
 
     fetch("/api/section-access")
       .then((res) => res.json())
-      .then((data) => setPlan(data.plan || "Starter"));
+      .then((data) => {
+        setShopHandle(data.shop || "");
+        setPlan(data.plan || "Starter");
+      });
   }, []);
 
   useEffect(() => {
@@ -49,13 +66,50 @@ export default function SectionDashboard() {
     }
   }, [showToast]);
 
-  const handleAddToTheme = async (section) => {
+  const fetchThemes = async () => {
+    if (themesLoaded || themesLoading) return;
+    try {
+      setThemesLoading(true);
+      const res = await fetch("/api/themes");
+      const data = await res.json();
+      setThemes(data?.themes || []);
+      setThemesLoaded(true);
+    } finally {
+      setThemesLoading(false);
+    }
+  };
+
+  const openCardPopover = async (i) => {
+    await fetchThemes();
+    setCardPopoverActiveIndex(i);
+  };
+
+  const closeAllPopovers = () => {
+    setCardPopoverActiveIndex(null);
+  };
+
+  const themeBadgeTone = (role) => {
+    switch (role) {
+      case "main":
+        return "success";
+      case "development":
+        return "attention";
+      case "unpublished":
+      default:
+        return "info";
+    }
+  };
+
+  const handleAddToTheme = async (section, theme) => {
     const res = await fetch("/api/add-to-theme", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         sectionTitle: section.sectionHandle,
         imageUrl: section.imageUrl,
+        themeId: `gid://shopify/OnlineStoreTheme/${theme?.id}`,
+        title: section.title || section.sectionHandle,
+        content: section.code,
       }),
     });
 
@@ -67,24 +121,63 @@ export default function SectionDashboard() {
       );
       setBannerLink("/app/pricing");
       setShowBanner(true);
-      setShowToast(false);
     } else if (res.status === 409) {
       setBannerMessage("This section is already added to your theme.");
       setBannerLink("");
       setShowBanner(true);
-      setShowToast(false);
     } else if (data.success) {
-      setToastMessage(" Section added to theme successfully!");
+      setToastMessage("Section added to theme successfully!");
       setShowToast(true);
+      setAddedToThemeIds((prev) => [
+        ...new Set([...prev, section.sectionHandle]),
+      ]);
     } else {
-      setToastMessage(" Failed to add section.");
+      setToastMessage("Failed to add section.");
       setShowToast(true);
     }
+
+    closeAllPopovers();
   };
 
+  const themeItemsForSection = (section) =>
+    (themes || []).map((t) => ({
+      content: (
+        <InlineStack align="space-between" blockAlign="center">
+          <span>{t.name}</span>
+          <Badge tone={themeBadgeTone(t.role)}>{t.role}</Badge>
+        </InlineStack>
+      ),
+      onAction: () => handleAddToTheme(section, t),
+    }));
+  const headerThemeItems = useMemo(
+    () =>
+      (themes || []).map((t) => {
+        const storeHandle = shopHandle.replace(".myshopify.com", "");
+
+        return {
+          content: (
+            <InlineStack align="space-between" blockAlign="center">
+              <span>{t.name}</span>
+              <Badge tone={themeBadgeTone(t.role)}>{t.role}</Badge>
+            </InlineStack>
+          ),
+          onAction: () => {
+            const url = `https://admin.shopify.com/store/${storeHandle}/themes/${t.id}/editor`;
+            window.open(url, "_blank");
+            closeAllPopovers();
+          },
+        };
+      }),
+    [themes, shopHandle],
+  );
+
+  const openHeaderPopover = async () => {
+    await fetchThemes();
+    setHeaderPopoverActive(true);
+  };
   return (
     <Frame>
-      <Loading />
+      {themesLoading && <Loading />}
 
       <Page>
         {showBanner && (
@@ -108,7 +201,6 @@ export default function SectionDashboard() {
             </p>
           </Banner>
         )}
-
         <div
           style={{
             maxWidth: "940px",
@@ -157,15 +249,34 @@ export default function SectionDashboard() {
             </div>
           </div>
 
-          <div>
-            <Button disclosure>Customize in</Button>
-          </div>
-        </div>
-
-        <div style={{ marginTop: 30 }}>
-          <Text as="h2" variant="headingMd" fontWeight="medium">
-            The sections you own will show here
-          </Text>
+          <Popover
+            active={headerPopoverActive}
+            autofocusTarget="none"
+            preferredAlignment="right"
+            sectioned={false}
+            onClose={closeAllPopovers}
+            activator={
+              <Button
+                disclosure
+                onClick={openHeaderPopover}
+                loading={themesLoading}
+              >
+                Customize in
+              </Button>
+            }
+          >
+            <div style={{ minWidth: "160px", maxWidth: "220px" }}>
+              <ActionList
+                items={
+                  themesLoading
+                    ? [{ content: "Loading themes..." }]
+                    : headerThemeItems.length
+                      ? headerThemeItems
+                      : [{ content: "No themes found" }]
+                }
+              />
+            </div>
+          </Popover>
         </div>
 
         <div
@@ -176,53 +287,83 @@ export default function SectionDashboard() {
             marginTop: 20,
           }}
         >
-          {addedSections.map((section, i) => (
-            <div
-              key={i}
-              style={{
-                width: 220,
-                border: "1px solid #ddd",
-                borderRadius: "10px",
-                overflow: "hidden",
-                background: "#fff",
-              }}
-            >
-              <div style={{ width: "100%", height: 120, overflow: "hidden" }}>
-                <img
-                  src={section.imageUrl}
-                  alt={section.sectionHandle}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
-                />
-              </div>
+          {addedSections.map((section, i) => {
+            const popoverActive = cardPopoverActiveIndex === i;
+            return (
               <div
+                key={i}
                 style={{
-                  padding: "10px 12px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+                  width: 220,
+                  border: "1px solid #ddd",
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                  background: "#fff",
                 }}
               >
-                <Text fontWeight="medium" variant="bodySm">
-                  {section.sectionHandle.replace(/-/g, " ")}
-                </Text>
-                <Icon source={ViewIcon} color="subdued" />
-              </div>
-              <div style={{ padding: "0 12px 12px 12px" }}>
-                <Button
-                  fullWidth
-                  variant="primary"
-                  size="slim"
-                  onClick={() => handleAddToTheme(section)}
+                <div style={{ width: "100%", height: 120, overflow: "hidden" }}>
+                  <img
+                    src={section.imageUrl}
+                    alt={section.sectionHandle}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+
+                <div
+                  style={{
+                    padding: "10px 12px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
                 >
-                  Add to theme
-                </Button>
+                  <Text fontWeight="medium" variant="bodySm">
+                    {section.sectionHandle.replace(/-/g, " ")}
+                  </Text>
+                  <Icon source={ViewIcon} color="subdued" />
+                </div>
+
+                <div style={{ padding: "0 12px 12px" }}>
+                  <Popover
+                    active={popoverActive}
+                    onClose={closeAllPopovers}
+                    preferredAlignment="left"
+                    sectioned={false}
+                    activator={
+                      <Button
+                        fullWidth
+                        variant="primary"
+                        size="slim"
+                        disabled={addedToThemeIds.includes(
+                          section.sectionHandle,
+                        )}
+                        onClick={() => openCardPopover(i)}
+                        loading={themesLoading && popoverActive}
+                      >
+                        {addedToThemeIds.includes(section.sectionHandle)
+                          ? "Already Added"
+                          : "Add to theme"}
+                      </Button>
+                    }
+                  >
+                    <div style={{ minWidth: "160px", maxWidth: "220px" }}>
+                      <ActionList
+                        items={
+                          themesLoading
+                            ? [{ content: "Loading themes..." }]
+                            : themes?.length
+                              ? themeItemsForSection(section)
+                              : [{ content: "No themes found" }]
+                        }
+                      />
+                    </div>
+                  </Popover>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div style={{ marginTop: 40 }}>
@@ -258,64 +399,7 @@ export default function SectionDashboard() {
               />
             </MediaCard>
           </div>
-
-          <div style={{ marginTop: 12 }}>
-            <Text variant="bodyMd" fontWeight="semibold"></Text>
-          </div>
-          <Layout>
-            <Layout.Section>
-              <Card>
-                <div style={{ padding: "16px" }}>
-                  <div style={{ marginBottom: "16px" }}>
-                    <Text variant="headingMd" fontWeight="bold">
-                      Need help?
-                    </Text>
-                  </div>
-
-                  <div style={{ marginBottom: "12px" }}>
-                    <Text tone="subdued">
-                      Email{" "}
-                      <a href="mailto:help@section.store">help@section.store</a>{" "}
-                      or use{" "}
-                      <a
-                        href="/contact"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        our contact form
-                      </a>
-                    </Text>
-                  </div>
-
-                  <div style={{ marginBottom: "24px" }}>
-                    <Text tone="subdued" size="small">
-                      We are a small but dedicated team doing our best so please
-                      expect slightly longer reply times &lt;3
-                    </Text>
-                  </div>
-
-                  <InlineStack gap="200" wrap>
-                    <Button size="slim" icon={LogoYoutubeIcon}>
-                      Youtube Tutorials
-                    </Button>
-
-                    <Button size="slim" icon={SendIcon}>
-                      Request Section
-                    </Button>
-                    <Button size="slim" icon={EmailIcon}>
-                      Get Support
-                    </Button>
-
-                    <Button size="slim" icon={LiveIcon}>
-                      FAQ
-                    </Button>
-                  </InlineStack>
-                </div>
-              </Card>
-            </Layout.Section>
-          </Layout>
         </div>
-
         {showToast && (
           <Toast content={toastMessage} onDismiss={() => setShowToast(false)} />
         )}

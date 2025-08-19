@@ -9,5 +9,5 @@ export const loader = async ({ request }) => {
   const shopData = await db.shop.findUnique({ where: { shop } });
   const plan = shopData?.planName || "Starter";
 
-  return json({ plan });
+  return json({ plan ,shop});
 };
