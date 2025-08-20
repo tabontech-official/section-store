@@ -198,9 +198,14 @@ export default function NewestSlider() {
       .then((data) => {
         const titles = data.map((section) => section.sectionHandle);
         console.log(titles);
-        setAddedTitles(titles)
+        setAddedTitles(titles);
       });
   }, []);
+  const slugify = (str = "") =>
+    String(str)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
   useEffect(() => {
     if (showToast) {
       const timer = setTimeout(() => setShowToast(false), 3000);
@@ -242,7 +247,9 @@ export default function NewestSlider() {
         setToastMessage(" Section saved successfully!");
         setShowToast(true);
         setShowModal(false);
-        setAddedTitles((prev) => [...prev, modalContent?.title]);
+        // setAddedTitles((prev) => [...prev, modalContent?.title]);
+        setAddedTitles((prev) => [...prev, slugify(modalContent?.title)]);
+
         navigate("/app/my-section");
       } else {
         setToastMessage(data.error || " Something went wrong");
@@ -452,10 +459,12 @@ export default function NewestSlider() {
                           fullWidth
                           variant="primary"
                           icon={CreditCardIcon}
-                          disabled={addedTitles.includes(modalContent?.title)}
+                          disabled={addedTitles.includes(
+                            slugify(modalContent?.title),
+                          )}
                           onClick={handleSave}
                         >
-                          {addedTitles.includes(modalContent?.title)
+                          {addedTitles.includes(slugify(modalContent?.title))
                             ? "Added"
                             : "Add Section"}
                         </Button>

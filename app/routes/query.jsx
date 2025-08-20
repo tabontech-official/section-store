@@ -43,3 +43,31 @@ export async function FileUpssert(graphql, { themeId, filename, content }) {
 
   return await request.json();
 }
+
+
+
+export async function themeFilesDelete(graphql, { themeId, filename }) {
+  const request = await graphql(
+    `
+      mutation themeFilesDelete($themeId: ID!, $files: [String!]!) {
+        themeFilesDelete(themeId: $themeId, files: $files) {
+          deletedThemeFiles {
+            filename
+          }
+          userErrors {
+            field
+            message
+          }
+        }
+      }
+    `,
+    {
+      variables: {
+        themeId,
+        files: [filename],
+      },
+    }
+  );
+
+  return await request.json();
+}

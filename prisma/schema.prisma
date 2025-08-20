@@ -34,6 +34,7 @@ model Session {
 model SectionStatus {
   id             String   @id @default(cuid())
   sectionHandle  String   @unique
+  shop           String   @default("unknown-shop")
   status         String
   imageUrl       String?  // Optional: Stores section image URL
   createdAt      DateTime @default(now())
@@ -68,9 +69,10 @@ model CustomerDataRequest {
 
 model ThemeSection {
   id            String   @id @default(cuid())
-  shop          String   // Store domain (e.g., mystore.myshopify.com)
+  shop          String  
   sectionTitle  String
   imageUrl      String
   addedAt       DateTime @default(now())
-  
+  themeId       String?   
+  title         String?
 }

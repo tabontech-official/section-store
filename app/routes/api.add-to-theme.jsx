@@ -12,11 +12,9 @@ function slugify(str) {
 
 export const action = async ({ request }) => {
   try {
-    // Authenticate admin
     const { session, admin } = await authenticate.admin(request);
     const shop = session.shop;
 
-    // Parse request body once
     let body;
     try {
       body = await request.json();
@@ -26,12 +24,13 @@ export const action = async ({ request }) => {
 
     const { sectionTitle, imageUrl, themeId, title, content } = body || {};
 
-    // Validate required fields for section DB
     if (!sectionTitle || !imageUrl) {
-      return json({ error: "Missing sectionTitle or imageUrl" }, { status: 400 });
+      return json(
+        { error: "Missing sectionTitle or imageUrl" },
+        { status: 400 },
+      );
     }
 
-    // ---- Check plan limits ----
     const shopData = await db.shop.findUnique({ where: { shop } });
     const rawPlan = shopData?.planName || "Starter";
     const plan = rawPlan.replace(" Plan", "");
@@ -57,16 +56,23 @@ export const action = async ({ request }) => {
       );
     }
 
-    // Save section record in DB
-    await db.themeSection.create({
-      data: { shop, sectionTitle, imageUrl },
-    });
+    // await db.themeSection.create({
+    //   data: { shop, sectionTitle, imageUrl },
+    // });
 
-    // ---- Upload section to theme ----
+    await db.themeSection.create({
+      data: {
+        shop,
+        sectionTitle,
+        imageUrl,
+        themeId: themeId,
+        title,
+      },
+    });
     if (!themeId || !title || !content) {
       return json(
         { error: "themeId, title, content are required for FileUpssert" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 

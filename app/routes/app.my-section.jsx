@@ -175,6 +175,52 @@ export default function SectionDashboard() {
     await fetchThemes();
     setHeaderPopoverActive(true);
   };
+
+
+const handleRemoveFromTheme = async (section) => {
+  try {
+    const res = await fetch("/api/remove-from-theme", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sectionTitle: section.sectionHandle }), // 👈 sectionHandle bhej rahe hain
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      setToastMessage("Section removed from theme!");
+      setShowToast(true);
+
+      // ✅ DB se bhi nikal do (frontend state update)
+      setAddedToThemeIds((prev) =>
+        prev.filter((id) => id !== section.sectionHandle)
+      );
+
+      // ✅ "addedSections" se bhi delete karna hai (optional)
+      setAddedSections((prev) =>
+        prev.filter((s) => s.sectionHandle !== section.sectionHandle)
+      );
+    } else {
+      setToastMessage(data.error || "Failed to remove section.");
+      setShowToast(true);
+    }
+  } catch (err) {
+    console.error(err);
+    setToastMessage("Server error while removing.");
+    setShowToast(true);
+  }
+};
+
+useEffect(() => {
+  fetch("/api/deletebutton") 
+    .then((res) => res.json())
+    .then((data) => {
+      if (Array.isArray(data)) {
+        setAddedToThemeIds(data.map((s) => s.sectionTitle));
+      }
+    });
+}, []);
+
   return (
     <Frame>
       {themesLoading && <Loading />}
@@ -325,7 +371,7 @@ export default function SectionDashboard() {
                   <Icon source={ViewIcon} color="subdued" />
                 </div>
 
-                <div style={{ padding: "0 12px 12px" }}>
+                {/* <div style={{ padding: "0 12px 12px" }}>
                   <Popover
                     active={popoverActive}
                     onClose={closeAllPopovers}
@@ -360,7 +406,51 @@ export default function SectionDashboard() {
                       />
                     </div>
                   </Popover>
-                </div>
+                </div> */}
+                <div style={{ padding: "0 12px 12px" }}>
+  {addedToThemeIds.includes(section.sectionHandle) ? (
+    <Button
+      fullWidth
+      tone="critical"
+      size="slim"
+      onClick={() => handleRemoveFromTheme(section)}
+    >
+      Delete from theme
+    </Button>
+  ) : (
+    // ✅ Agar abhi add nahi hua hai
+    <Popover
+      active={popoverActive}
+      onClose={closeAllPopovers}
+      preferredAlignment="left"
+      sectioned={false}
+      activator={
+        <Button
+          fullWidth
+          variant="primary"
+          size="slim"
+          onClick={() => openCardPopover(i)}
+          loading={themesLoading && popoverActive}
+        >
+          Add to theme
+        </Button>
+      }
+    >
+      <div style={{ minWidth: "160px", maxWidth: "220px" }}>
+        <ActionList
+          items={
+            themesLoading
+              ? [{ content: "Loading themes..." }]
+              : themes?.length
+              ? themeItemsForSection(section)
+              : [{ content: "No themes found" }]
+          }
+        />
+      </div>
+    </Popover>
+  )}
+</div>
+
               </div>
             );
           })}

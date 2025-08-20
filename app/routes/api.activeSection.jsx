@@ -1,3 +1,36 @@
+// import { json } from "@remix-run/node";
+// import db from "../db.server";
+// import { authenticate } from "../shopify.server";
+
+// export const action = async ({ request }) => {
+//   const { session } = await authenticate.admin(request);
+//   const shop = session.shop;
+
+//   const body = await request.json();
+//   const { title, imageUrl } = body;
+
+//   if (!title || !imageUrl) {
+//     return json({ error: "Missing title or imageUrl" }, { status: 400 });
+//   }
+
+//   await db.sectionStatus.upsert({
+//     where: { sectionHandle: title },
+//     update: {
+//       status: "added",
+//       imageUrl,
+//     },
+//     create: {
+//       sectionHandle: title,
+//       status: "added",
+//       imageUrl,
+//     },
+//   });
+
+//   return json({ success: true });
+// };
+
+
+
 import { json } from "@remix-run/node";
 import db from "../db.server";
 import { authenticate } from "../shopify.server";
@@ -13,13 +46,11 @@ export const action = async ({ request }) => {
     return json({ error: "Missing title or imageUrl" }, { status: 400 });
   }
 
-  await db.sectionStatus.upsert({
-    where: { sectionHandle: title },
-    update: {
-      status: "added",
-      imageUrl,
-    },
-    create: {
+  // ❌ Upsert nahi chalega (unique constraint hataya)
+  // ✅ Instead use create (har dafa naya row banega)
+  await db.sectionStatus.create({
+    data: {
+      shop,
       sectionHandle: title,
       status: "added",
       imageUrl,
@@ -28,6 +59,3 @@ export const action = async ({ request }) => {
 
   return json({ success: true });
 };
-
-
-
