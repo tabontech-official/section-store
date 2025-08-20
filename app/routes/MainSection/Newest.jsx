@@ -29,6 +29,20 @@ const newestProducts = [
       Spacing: "Fine-tune padding and margins for the entire section",
     },
   },
+    {
+    title: "Rehan Section 001",
+    media:
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png",
+    type: "image",
+    price: "$4.99",
+    details: {
+      "Slider Layout": "Adjust number of visible slides, spacing, and width",
+      Colors: "Change background, text, button, and navigation colors",
+      Button: 'Modify text, link, size, and style of the "View All" button',
+      Typography: "Select custom fonts and adjust sizes for all text elements",
+      Spacing: "Fine-tune padding and margins for the entire section",
+    },
+  },
   {
     title: "New Arrival 2",
     media:
