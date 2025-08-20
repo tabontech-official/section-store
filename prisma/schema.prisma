@@ -76,3 +76,14 @@ model ThemeSection {
   themeId       String?   
   title         String?
 }
+
+
+model InstalledShops {
+  id             String   @id @default(cuid())
+  shop           String   @unique
+  email          String?
+  domain         String?
+  myshopifyDomain String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

@@ -46,8 +46,7 @@ export const action = async ({ request }) => {
     return json({ error: "Missing title or imageUrl" }, { status: 400 });
   }
 
-  // ❌ Upsert nahi chalega (unique constraint hataya)
-  // ✅ Instead use create (har dafa naya row banega)
+
   await db.sectionStatus.create({
     data: {
       shop,

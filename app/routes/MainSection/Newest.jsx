@@ -14,190 +14,7 @@ import { FiEye } from "react-icons/fi";
 import { CreditCardIcon, LockIcon, ViewIcon } from "@shopify/polaris-icons";
 import { useNavigate } from "@remix-run/react";
 
-const newestProducts = [
-  {
-    title: "New Arrival 1",
-    media:
-      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png",
-    type: "image",
-    price: "$3.99",
-    details: {
-      "Slider Layout": "Adjust number of visible slides, spacing, and width",
-      Colors: "Change background, text, button, and navigation colors",
-      Button: 'Modify text, link, size, and style of the "View All" button',
-      Typography: "Select custom fonts and adjust sizes for all text elements",
-      Spacing: "Fine-tune padding and margins for the entire section",
-    },
-  },
-    {
-    title: "Rehan Section 001",
-    media:
-      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png",
-    type: "image",
-    price: "$4.99",
-    details: {
-      "Slider Layout": "Adjust number of visible slides, spacing, and width",
-      Colors: "Change background, text, button, and navigation colors",
-      Button: 'Modify text, link, size, and style of the "View All" button',
-      Typography: "Select custom fonts and adjust sizes for all text elements",
-      Spacing: "Fine-tune padding and margins for the entire section",
-    },
-  },
-  {
-    title: "New Arrival 2",
-    media:
-      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/buy_it_now.png",
-    type: "image",
-    price: "$4.99",
-    details: {
-      "Slider Layout": "Adjust number of visible slides, spacing, and width",
-      Colors: "Change background, text, button, and navigation colors",
-      Button: 'Modify text, link, size, and style of the "View All" button',
-      Typography: "Select custom fonts and adjust sizes for all text elements",
-      Spacing: "Fine-tune padding and margins for the entire section",
-    },
-  },
-  {
-    title: "New Arrival 3",
-    media:
-      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png",
-    type: "video",
-    price: "$4.99",
-    details: {
-      "Slider Layout": "Adjust number of visible slides, spacing, and width",
-      Colors: "Change background, text, button, and navigation colors",
-      Button: 'Modify text, link, size, and style of the "View All" button',
-      Typography: "Select custom fonts and adjust sizes for all text elements",
-      Spacing: "Fine-tune padding and margins for the entire section",
-    },
-  },
-  {
-    title: "New Arrival 4",
-    media:
-      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png",
-    type: "image",
-    price: "$4.99",
-    details: {
-      "Slider Layout": "Adjust number of visible slides, spacing, and width",
-      Colors: "Change background, text, button, and navigation colors",
-      Button: 'Modify text, link, size, and style of the "View All" button',
-      Typography: "Select custom fonts and adjust sizes for all text elements",
-      Spacing: "Fine-tune padding and margins for the entire section",
-    },
-  },
-  {
-    title: "New Arrival 5",
-    media:
-      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png",
-    type: "image",
-    price: "$4.99",
-    details: {
-      "Slider Layout": "Adjust number of visible slides, spacing, and width",
-      Colors: "Change background, text, button, and navigation colors",
-      Button: 'Modify text, link, size, and style of the "View All" button',
-      Typography: "Select custom fonts and adjust sizes for all text elements",
-      Spacing: "Fine-tune padding and margins for the entire section",
-    },
-  },
-  {
-    title: "New Arrival 6",
-    media:
-      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png",
-    type: "image",
-    price: "$4.99",
-    details: {
-      "Slider Layout": "Adjust number of visible slides, spacing, and width",
-      Colors: "Change background, text, button, and navigation colors",
-      Button: 'Modify text, link, size, and style of the "View All" button',
-      Typography: "Select custom fonts and adjust sizes for all text elements",
-      Spacing: "Fine-tune padding and margins for the entire section",
-    },
-  },
-  {
-    title: "New Arrival 7",
-    media:
-      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png",
-    type: "image",
-    price: "$3.99",
-    details: {
-      "Slider Layout": "Adjust number of visible slides, spacing, and width",
-      Colors: "Change background, text, button, and navigation colors",
-      Button: 'Modify text, link, size, and style of the "View All" button',
-      Typography: "Select custom fonts and adjust sizes for all text elements",
-      Spacing: "Fine-tune padding and margins for the entire section",
-    },
-  },
-  {
-    title: "New Arrival 8",
-    media:
-      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/buy_it_now.png",
-    type: "image",
-    price: "$4.99",
-    details: {
-      "Slider Layout": "Adjust number of visible slides, spacing, and width",
-      Colors: "Change background, text, button, and navigation colors",
-      Button: 'Modify text, link, size, and style of the "View All" button',
-      Typography: "Select custom fonts and adjust sizes for all text elements",
-      Spacing: "Fine-tune padding and margins for the entire section",
-    },
-  },
-  {
-    title: "New Arrival 9",
-    media:
-      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png",
-    type: "video",
-    price: "$4.99",
-    details: {
-      "Slider Layout": "Adjust number of visible slides, spacing, and width",
-      Colors: "Change background, text, button, and navigation colors",
-      Button: 'Modify text, link, size, and style of the "View All" button',
-      Typography: "Select custom fonts and adjust sizes for all text elements",
-      Spacing: "Fine-tune padding and margins for the entire section",
-    },
-  },
-  {
-    title: "New Arrival 10",
-    media:
-      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png",
-    type: "image",
-    price: "$4.99",
-    details: {
-      "Slider Layout": "Adjust number of visible slides, spacing, and width",
-      Colors: "Change background, text, button, and navigation colors",
-      Button: 'Modify text, link, size, and style of the "View All" button',
-      Typography: "Select custom fonts and adjust sizes for all text elements",
-      Spacing: "Fine-tune padding and margins for the entire section",
-    },
-  },
-  {
-    title: "New Arrival 11",
-    media:
-      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png",
-    type: "image",
-    price: "$4.99",
-    details: {
-      "Slider Layout": "Adjust number of visible slides, spacing, and width",
-      Colors: "Change background, text, button, and navigation colors",
-      Button: 'Modify text, link, size, and style of the "View All" button',
-      Typography: "Select custom fonts and adjust sizes for all text elements",
-      Spacing: "Fine-tune padding and margins for the entire section",
-    },
-  },
-  {
-    title: "New Arrival 12",
-    media:
-      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/testimonials.png",
-    type: "image",
-    price: "$4.99",
-    details: {
-      "Slider Layout": "Adjust number of visible slides, spacing, and width",
-      Colors: "Change background, text, button, and navigation colors",
-      Button: 'Modify text, link, size, and style of the "View All" button',
-      Typography: "Select custom fonts and adjust sizes for all text elements",
-      Spacing: "Fine-tune padding and margins for the entire section",
-    },
-  },
-];
+import { newestProducts } from "../sections/sections";
 
 export default function NewestSlider() {
   const [showModal, setShowModal] = useState(false);
@@ -206,6 +23,22 @@ export default function NewestSlider() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [addedTitles, setAddedTitles] = useState([]);
+    useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/store-details");
+        const data = await res.json();
+
+        if (data.success) {
+          console.log(" Shop install callback saved:", data.shop);
+        } else {
+          console.log("⚡ Already exists, skipped:", data.message);
+        }
+      } catch (err) {
+        console.error("❌ Callback trigger failed", err);
+      }
+    })();
+  }, []);
   useEffect(() => {
     fetch("/api/fetchaddedSection")
       .then((res) => res.json())
@@ -229,10 +62,14 @@ export default function NewestSlider() {
 
   const openPreview = (item) => {
     setModalContent({
+      id: item.id,
       title: item.title,
       price: item.price,
       mediaList: [item.media],
       details: item.details,
+      references: item.references,
+      launchedDate: item.launchedDate,
+      lastModified: item.lastModified,
     });
     setActiveImageIndex(0);
     setShowModal(true);
@@ -275,6 +112,32 @@ export default function NewestSlider() {
       setShowToast(true);
     }
   };
+  const handleSaveSection = async (section) => {
+    try {
+      const res = await fetch("/api/activeSection", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: section.title,
+          imageUrl: section.media,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setToastMessage("Section saved successfully!");
+        setShowToast(true);
+        setAddedTitles((prev) => [...prev, slugify(section.title)]);
+      } else {
+        setToastMessage(data.error || "Something went wrong");
+        setShowToast(true);
+      }
+    } catch (err) {
+      console.error("Save failed", err);
+      setToastMessage("Failed to save section.");
+      setShowToast(true);
+    }
+  };
 
   return (
     <Frame>
@@ -284,8 +147,13 @@ export default function NewestSlider() {
         <div
           style={{ padding: "32px var(--p-space-400)", position: "relative" }}
         >
-          <Text variant="headingSm" as="h3" fontWeight="semibold">
-            Animated Sections
+          <Text
+            variant="headingMd"
+            fontWeight="semibold"
+            as="h2"
+            alignment="start"
+          >
+            Premium Sections
           </Text>
           <style>
             {`
@@ -338,77 +206,100 @@ export default function NewestSlider() {
               marginTop: "24px",
             }}
           >
-            {newestProducts.map((item, idx) => (
-              <Card
-                key={idx}
-                padding="0"
-                style={{
-                  borderRadius: "12px",
-                  overflow: "hidden",
-                  background: "#fff",
-                  border: "1px solid #ddd",
-                  height: "260px",
-                  cursor: "pointer",
-                  position: "relative",
-                  transition: "transform 0.3s ease",
-                }}
-              >
-                <div
-                  className="card-click-wrapper"
-                  onClick={() => openPreview(item)}
+            {newestProducts
+              .filter((item) => item.price === "Premium")
+              .map((item, idx) => (
+                <Card
+                  key={idx}
+                  padding="0"
                   style={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
+                    borderRadius: "12px",
+                    overflow: "hidden",
+                    background: "#fff",
+                    border: "1px solid #ddd",
+                    height: "260px",
+                    cursor: "pointer",
+                    position: "relative",
+                    transition: "transform 0.3s ease",
                   }}
                 >
-                  <div className="hover-card-media">
-                    {item.type === "image" ? (
-                      <img src={item.media} alt={item.title} />
-                    ) : (
-                      <video src={item.media} muted autoPlay loop playsInline />
-                    )}
-                    <div className="hover-overlay-button">
-                      <Button
-                        icon={ViewIcon}
+                  <div
+                    className="card-click-wrapper"
+                    onClick={() => openPreview(item)}
+                    style={{
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <div className="hover-card-media">
+                      {item.type === "image" ? (
+                        <img src={item.media} alt={item.title} />
+                      ) : (
+                        <video
+                          src={item.media}
+                          muted
+                          autoPlay
+                          loop
+                          playsInline
+                        />
+                      )}
+                      <div className="hover-overlay-button">
+                        <Button
+                          icon={ViewIcon}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openPreview(item);
+                          }}
+                        >
+                          View details
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        padding: "12px 16px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        borderTop: "1px solid #e1e3e5", // subtle divider for professionalism
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "2px",
+                        }}
+                      >
+                        <Text variant="bodySm" color="subdued">
+                          {item.title}
+                        </Text>
+                      </div>
+
+                      <Text
+                        variant="bodyMd"
+                        fontWeight="bold"
+                        color="interactive"
                         onClick={(e) => {
                           e.stopPropagation();
                           openPreview(item);
                         }}
+                        style={{
+                          cursor: "pointer",
+                          padding: "4px 10px",
+                          border: "1px solid #d0d6dd",
+                          borderRadius: "6px",
+                          backgroundColor: "#f9fafb",
+                        }}
                       >
-                        View details
-                      </Button>
+                        #{item.id}
+                      </Text>
                     </div>
                   </div>
-
-                  <div
-                    style={{
-                      padding: "12px 16px",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      flexGrow: 1,
-                    }}
-                  >
-                    <Text variant="bodySm" fontWeight="medium">
-                      {item.title}
-                    </Text>
-                    <Text
-                      variant="bodySm"
-                      fontWeight="medium"
-                      color="interactive"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openPreview(item);
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      View
-                    </Text>
-                  </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              ))}
           </div>
 
           {showModal && (
@@ -510,13 +401,121 @@ export default function NewestSlider() {
                         <Text variant="bodySm">
                           Works with any Shopify theme
                         </Text>
+                        <Text>
+                          <span style={{ fontWeight: "700", font: "bold" }}>
+                            launched:
+                          </span>{" "}
+                          {modalContent.launchedDate}
+                        </Text>
+                        <Text variant="bodySm">
+                          <span style={{ fontWeight: "700", font: "bold" }}>
+                            last Modified:
+                          </span>{" "}
+                          {modalContent.lastModified}
+                        </Text>
                       </div>
                     </Card>
                   </div>
                 </div>
+
+                {modalContent.references?.length > 0 && (
+                  <div style={{ marginTop: "30px" }}>
+                    <Text variant="headingSm" fontWeight="bold">
+                      Related Sections
+                    </Text>
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns:
+                          "repeat(auto-fill, minmax(220px, 1fr))",
+                        gap: "16px",
+                        marginTop: "16px",
+                      }}
+                    >
+                      {newestProducts
+                        .filter((p) => modalContent.references.includes(p.id))
+                        .map((refItem) => (
+                          <Card
+                            key={refItem.id}
+                            padding="0"
+                            style={{
+                              borderRadius: "8px",
+                              overflow: "hidden",
+                              border: "1px solid #ddd",
+                            }}
+                          >
+                            <div
+                              style={{ height: "140px", overflow: "hidden" }}
+                            >
+                              {refItem.type === "image" ? (
+                                <img
+                                  src={refItem.media}
+                                  alt={refItem.title}
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                  }}
+                                />
+                              ) : (
+                                <video
+                                  src={refItem.media}
+                                  muted
+                                  autoPlay
+                                  loop
+                                  playsInline
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                  }}
+                                />
+                              )}
+                            </div>
+                            <div style={{ padding: "12px" }}>
+                              <Text variant="bodySm" fontWeight="medium">
+                                #{refItem.id}
+                              </Text>
+                              <div
+                                style={{
+                                  marginTop: "8px",
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  gap: "6px",
+                                }}
+                              >
+                                <Button
+                                  size="slim"
+                                  onClick={() =>
+                                    navigate(`/app/section/${refItem.id}`)
+                                  }
+                                >
+                                  Preview
+                                </Button>
+
+                                <Button
+                                  size="slim"
+                                  variant="primary"
+                                  disabled={addedTitles.includes(
+                                    slugify(refItem.title),
+                                  )}
+                                  onClick={() => handleSaveSection(refItem)}
+                                >
+                                  {addedTitles.includes(slugify(refItem.title))
+                                    ? "Added"
+                                    : "Add"}
+                                </Button>
+                              </div>
+                            </div>
+                          </Card>
+                        ))}
+                    </div>
+                  </div>
+                )}
               </Modal.Section>
             </Modal>
           )}
+
           {showToast && (
             <Toast
               content={toastMessage}
