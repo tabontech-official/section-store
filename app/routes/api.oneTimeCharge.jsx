@@ -8,7 +8,6 @@ export async function action({ request }) {
     const body = await request.json();
     const { name, returnUrl, price } = body;
 
-    console.log("🔍 Body received:", body);
 
     if (!name || !returnUrl || !price?.amount || !price?.currencyCode) {
       return json({ error: "Missing required billing fields" }, { status: 400 });
