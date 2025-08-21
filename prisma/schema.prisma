@@ -36,7 +36,8 @@ model SectionStatus {
   sectionHandle  String   @unique
   shop           String   @default("unknown-shop")
   status         String
-  imageUrl       String?  // Optional: Stores section image URL
+  imageUrl       String?  
+  price          String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }

@@ -37,13 +37,11 @@ export const loader = async ({ request }) => {
   const domain = shopData.domain;
   const myshopifyDomain = shopData.myshopify_domain;
 
-  // 🔹 Check if already installed in DB
   const existingShop = await db.installedShops.findUnique({
     where: { shop: myshopifyDomain },
   });
 
   if (existingShop) {
-    // Already in DB → skip emails & insert
     return json({
       success: false,
       message: "Shop already installed, skipping emails.",
@@ -51,7 +49,6 @@ export const loader = async ({ request }) => {
     });
   }
 
-  // 🔹 Otherwise → insert new + trigger emails
   await db.installedShops.create({
     data: {
       shop: myshopifyDomain,
@@ -61,7 +58,6 @@ export const loader = async ({ request }) => {
     },
   });
 
-  // Customer email
   await transporter.sendMail({
     from: `"Your App" <${process.env.EMAIL_USER}>`,
     to: email,
@@ -69,7 +65,6 @@ export const loader = async ({ request }) => {
     text: `Hello, your app has been installed successfully on ${domain}.`,
   });
 
-  // Admin email
   await transporter.sendMail({
     from: `"Your App" <${process.env.EMAIL_USER}>`,
     to: "2014tabontech@gmail.com",

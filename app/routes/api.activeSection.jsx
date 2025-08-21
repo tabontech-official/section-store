@@ -28,9 +28,6 @@
 
 //   return json({ success: true });
 // };
-
-
-
 import { json } from "@remix-run/node";
 import db from "../db.server";
 import { authenticate } from "../shopify.server";
@@ -40,21 +37,34 @@ export const action = async ({ request }) => {
   const shop = session.shop;
 
   const body = await request.json();
-  const { title, imageUrl } = body;
+  const { title, imageUrl, price, Price } = body;
+  const finalPrice = price || Price || null;
+
 
   if (!title || !imageUrl) {
     return json({ error: "Missing title or imageUrl" }, { status: 400 });
   }
 
+  try {
+    const createdSection = await db.sectionStatus.create({
+      data: {
+        shop,
+        sectionHandle: title,
+        status: "added",
+        imageUrl,
+        price: finalPrice,
+      },
+    });
 
-  await db.sectionStatus.create({
-    data: {
-      shop,
-      sectionHandle: title,
-      status: "added",
-      imageUrl,
-    },
-  });
 
-  return json({ success: true });
+    return json({
+      success: true,
+      section: createdSection, 
+    });
+  } catch (err) {
+    return json(
+      { error: "Failed to create section", details: err.message },
+      { status: 500 },
+    );
+  }
 };

@@ -100,7 +100,46 @@ export default function SectionDashboard() {
     }
   };
 
-  const handleAddToTheme = async (section, theme) => {
+  // const handleAddToTheme = async (section, theme) => {
+  //   const res = await fetch("/api/add-to-theme", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({
+  //       sectionTitle: section.sectionHandle,
+  //       imageUrl: section.imageUrl,
+  //       themeId: `gid://shopify/OnlineStoreTheme/${theme?.id}`,
+  //       title: section.title || section.sectionHandle,
+  //       content: section.code,
+  //     }),
+  //   });
+
+  //   const data = await res.json();
+
+  //   if (res.status === 403) {
+  //        setBannerMessage(data.error || "Something went wrong");
+
+  //     setBannerLink("/app/pricing");
+  //     setShowBanner(true);
+  //   } else if (res.status === 409) {
+  //     setBannerMessage("This section is already added to your theme.");
+  //     setBannerLink("");
+  //     setShowBanner(true);
+  //   } else if (data.success) {
+  //     setToastMessage("Section added to theme successfully!");
+  //     setShowToast(true);
+  //     setAddedToThemeIds((prev) => [
+  //       ...new Set([...prev, section.sectionHandle]),
+  //     ]);
+  //   } else {
+  //     setToastMessage("Failed to add section.");
+  //     setShowToast(true);
+  //   }
+
+  //   closeAllPopovers();
+  // };
+
+const handleAddToTheme = async (section, theme) => {
+  try {
     const res = await fetch("/api/add-to-theme", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -116,9 +155,7 @@ export default function SectionDashboard() {
     const data = await res.json();
 
     if (res.status === 403) {
-      setBannerMessage(
-        "You’ve reached your section limit. Please upgrade your plan.",
-      );
+      setBannerMessage(data.error || "Plan limit exceeded.");
       setBannerLink("/app/pricing");
       setShowBanner(true);
     } else if (res.status === 409) {
@@ -135,9 +172,15 @@ export default function SectionDashboard() {
       setToastMessage("Failed to add section.");
       setShowToast(true);
     }
+  } catch (error) {
+    setBannerMessage("Network error, please try again.");
+    setBannerLink("");
+    setShowBanner(true);
+  }
 
-    closeAllPopovers();
-  };
+  closeAllPopovers();
+};
+
 
   const themeItemsForSection = (section) =>
     (themes || []).map((t) => ({
@@ -182,7 +225,7 @@ const handleRemoveFromTheme = async (section) => {
     const res = await fetch("/api/remove-from-theme", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sectionTitle: section.sectionHandle }), // 👈 sectionHandle bhej rahe hain
+      body: JSON.stringify({ sectionTitle: section.sectionHandle }),
     });
 
     const data = await res.json();
@@ -191,12 +234,10 @@ const handleRemoveFromTheme = async (section) => {
       setToastMessage("Section removed from theme!");
       setShowToast(true);
 
-      // ✅ DB se bhi nikal do (frontend state update)
       setAddedToThemeIds((prev) =>
         prev.filter((id) => id !== section.sectionHandle)
       );
 
-      // ✅ "addedSections" se bhi delete karna hai (optional)
       setAddedSections((prev) =>
         prev.filter((s) => s.sectionHandle !== section.sectionHandle)
       );

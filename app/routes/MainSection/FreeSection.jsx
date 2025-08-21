@@ -13,7 +13,8 @@ import {
 const cardsPerPage = 4;
 
 import { newestProducts } from "../sections/sections";
-export default function FreeSection() {
+import { useLocation, useNavigate } from "@remix-run/react";
+export default function FreeSection({ selectedCategory }) {
   const [pageIndex, setPageIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState({});
@@ -21,7 +22,7 @@ export default function FreeSection() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [addedTitles, setAddedTitles] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     fetch("/api/fetchaddedSection")
       .then((res) => res.json())
@@ -44,8 +45,11 @@ export default function FreeSection() {
       return () => clearTimeout(timer);
     }
   }, [showToast]);
-  const freeProducts = newestProducts.filter((item) => item.price === "Free");
-
+  const freeProducts = newestProducts.filter(
+    (item) =>
+      item.price === "Free" &&
+      (!selectedCategory || item.category === selectedCategory),
+  );
   const chunkedProducts = [];
   for (let i = 0; i < freeProducts.length; i += cardsPerPage) {
     chunkedProducts.push(freeProducts.slice(i, i + cardsPerPage));
@@ -84,6 +88,7 @@ export default function FreeSection() {
         body: JSON.stringify({
           title: modalContent?.title,
           imageUrl: modalContent?.mediaList?.[0],
+          price: modalContent?.price,
         }),
       });
 
@@ -114,6 +119,7 @@ export default function FreeSection() {
         body: JSON.stringify({
           title: section.title,
           imageUrl: section.media,
+          Price: section.price, // capital P bhejna
         }),
       });
 
@@ -176,16 +182,16 @@ export default function FreeSection() {
             transform: scale(1.05);
           }
         `}</style>
-
-        <Text
-          variant="headingMd"
-          fontWeight="semibold"
-          as="h2"
-          alignment="start"
-        >
-          Free Sections
-        </Text>
-
+        {!selectedCategory && (
+          <Text
+            variant="headingMd"
+            fontWeight="semibold"
+            as="h2"
+            alignment="start"
+          >
+            Free Sections
+          </Text>
+        )}
         {pageIndex > 0 && (
           <button
             onClick={() => scrollToPage("left")}
@@ -289,7 +295,6 @@ export default function FreeSection() {
                           }}
                         >
                           <Text variant="bodySm" color="subdued">
-                         
                             {item.title}
                           </Text>
                         </div>
@@ -418,15 +423,14 @@ export default function FreeSection() {
                         Lifetime access & free updates
                       </Text>
                       <Text variant="bodySm">Works with any Shopify theme</Text>
-                      <Text >
+                      <Text>
                         <span style={{ fontWeight: "700", font: "bold" }}>
                           launched:
                         </span>{" "}
                         {modalContent.launchedDate}
-                       
                       </Text>
                       <Text variant="bodySm">
-                         <span style={{ fontWeight: "700", font: "bold" }}>
+                        <span style={{ fontWeight: "700", font: "bold" }}>
                           last Modified:
                         </span>{" "}
                         {modalContent.lastModified}
