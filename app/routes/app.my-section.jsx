@@ -138,49 +138,50 @@ export default function SectionDashboard() {
   //   closeAllPopovers();
   // };
 
-const handleAddToTheme = async (section, theme) => {
-  try {
-    const res = await fetch("/api/add-to-theme", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        sectionTitle: section.sectionHandle,
-        imageUrl: section.imageUrl,
-        themeId: `gid://shopify/OnlineStoreTheme/${theme?.id}`,
-        title: section.title || section.sectionHandle,
-        content: section.code,
-      }),
-    });
+  const handleAddToTheme = async (section, theme) => {
+    try {
+      const res = await fetch("/api/add-to-theme", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sectionTitle: section.sectionHandle,
+          imageUrl: section.imageUrl,
+          themeId: `gid://shopify/OnlineStoreTheme/${theme?.id}`,
+          title: section.title || section.sectionHandle,
+          content: section.code,
+          js: section.js,
+          css: section.css,
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.status === 403) {
-      setBannerMessage(data.error || "Plan limit exceeded.");
-      setBannerLink("/app/pricing");
-      setShowBanner(true);
-    } else if (res.status === 409) {
-      setBannerMessage("This section is already added to your theme.");
+      if (res.status === 403) {
+        setBannerMessage(data.error || "Plan limit exceeded.");
+        setBannerLink("/app/pricing");
+        setShowBanner(true);
+      } else if (res.status === 409) {
+        setBannerMessage("This section is already added to your theme.");
+        setBannerLink("");
+        setShowBanner(true);
+      } else if (data.success) {
+        setToastMessage("Section added to theme successfully!");
+        setShowToast(true);
+        setAddedToThemeIds((prev) => [
+          ...new Set([...prev, section.sectionHandle]),
+        ]);
+      } else {
+        setToastMessage("Failed to add section.");
+        setShowToast(true);
+      }
+    } catch (error) {
+      setBannerMessage("Network error, please try again.");
       setBannerLink("");
       setShowBanner(true);
-    } else if (data.success) {
-      setToastMessage("Section added to theme successfully!");
-      setShowToast(true);
-      setAddedToThemeIds((prev) => [
-        ...new Set([...prev, section.sectionHandle]),
-      ]);
-    } else {
-      setToastMessage("Failed to add section.");
-      setShowToast(true);
     }
-  } catch (error) {
-    setBannerMessage("Network error, please try again.");
-    setBannerLink("");
-    setShowBanner(true);
-  }
 
-  closeAllPopovers();
-};
-
+    closeAllPopovers();
+  };
 
   const themeItemsForSection = (section) =>
     (themes || []).map((t) => ({
@@ -219,48 +220,47 @@ const handleAddToTheme = async (section, theme) => {
     setHeaderPopoverActive(true);
   };
 
+  const handleRemoveFromTheme = async (section) => {
+    try {
+      const res = await fetch("/api/remove-from-theme", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sectionTitle: section.sectionHandle }),
+      });
 
-const handleRemoveFromTheme = async (section) => {
-  try {
-    const res = await fetch("/api/remove-from-theme", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sectionTitle: section.sectionHandle }),
-    });
+      const data = await res.json();
 
-    const data = await res.json();
+      if (data.success) {
+        setToastMessage("Section removed from theme!");
+        setShowToast(true);
 
-    if (data.success) {
-      setToastMessage("Section removed from theme!");
-      setShowToast(true);
+        setAddedToThemeIds((prev) =>
+          prev.filter((id) => id !== section.sectionHandle),
+        );
 
-      setAddedToThemeIds((prev) =>
-        prev.filter((id) => id !== section.sectionHandle)
-      );
-
-      setAddedSections((prev) =>
-        prev.filter((s) => s.sectionHandle !== section.sectionHandle)
-      );
-    } else {
-      setToastMessage(data.error || "Failed to remove section.");
+        setAddedSections((prev) =>
+          prev.filter((s) => s.sectionHandle !== section.sectionHandle),
+        );
+      } else {
+        setToastMessage(data.error || "Failed to remove section.");
+        setShowToast(true);
+      }
+    } catch (err) {
+      console.error(err);
+      setToastMessage("Server error while removing.");
       setShowToast(true);
     }
-  } catch (err) {
-    console.error(err);
-    setToastMessage("Server error while removing.");
-    setShowToast(true);
-  }
-};
+  };
 
-useEffect(() => {
-  fetch("/api/deletebutton") 
-    .then((res) => res.json())
-    .then((data) => {
-      if (Array.isArray(data)) {
-        setAddedToThemeIds(data.map((s) => s.sectionTitle));
-      }
-    });
-}, []);
+  useEffect(() => {
+    fetch("/api/deletebutton")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setAddedToThemeIds(data.map((s) => s.sectionTitle));
+        }
+      });
+  }, []);
 
   return (
     <Frame>
@@ -449,49 +449,48 @@ useEffect(() => {
                   </Popover>
                 </div> */}
                 <div style={{ padding: "0 12px 12px" }}>
-  {addedToThemeIds.includes(section.sectionHandle) ? (
-    <Button
-      fullWidth
-      tone="critical"
-      size="slim"
-      onClick={() => handleRemoveFromTheme(section)}
-    >
-      Delete from theme
-    </Button>
-  ) : (
-    // ✅ Agar abhi add nahi hua hai
-    <Popover
-      active={popoverActive}
-      onClose={closeAllPopovers}
-      preferredAlignment="left"
-      sectioned={false}
-      activator={
-        <Button
-          fullWidth
-          variant="primary"
-          size="slim"
-          onClick={() => openCardPopover(i)}
-          loading={themesLoading && popoverActive}
-        >
-          Add to theme
-        </Button>
-      }
-    >
-      <div style={{ minWidth: "160px", maxWidth: "220px" }}>
-        <ActionList
-          items={
-            themesLoading
-              ? [{ content: "Loading themes..." }]
-              : themes?.length
-              ? themeItemsForSection(section)
-              : [{ content: "No themes found" }]
-          }
-        />
-      </div>
-    </Popover>
-  )}
-</div>
-
+                  {addedToThemeIds.includes(section.sectionHandle) ? (
+                    <Button
+                      fullWidth
+                      tone="critical"
+                      size="slim"
+                      onClick={() => handleRemoveFromTheme(section)}
+                    >
+                      Delete from theme
+                    </Button>
+                  ) : (
+                    // ✅ Agar abhi add nahi hua hai
+                    <Popover
+                      active={popoverActive}
+                      onClose={closeAllPopovers}
+                      preferredAlignment="left"
+                      sectioned={false}
+                      activator={
+                        <Button
+                          fullWidth
+                          variant="primary"
+                          size="slim"
+                          onClick={() => openCardPopover(i)}
+                          loading={themesLoading && popoverActive}
+                        >
+                          Add to theme
+                        </Button>
+                      }
+                    >
+                      <div style={{ minWidth: "160px", maxWidth: "220px" }}>
+                        <ActionList
+                          items={
+                            themesLoading
+                              ? [{ content: "Loading themes..." }]
+                              : themes?.length
+                                ? themeItemsForSection(section)
+                                : [{ content: "No themes found" }]
+                          }
+                        />
+                      </div>
+                    </Popover>
+                  )}
+                </div>
               </div>
             );
           })}

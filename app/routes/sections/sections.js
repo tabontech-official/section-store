@@ -1,5 +1,9 @@
 import { code as rehanSection } from "./section/rehan-section-001";
-import { code as newArrival1 } from "./section/new-arrival-1";
+import {
+  code as newArrival1,
+  newArrival1Javascript,
+  newArrival1Css,
+} from "./section/new-arrival-1";
 
 function slugify(str = "") {
   return String(str)
@@ -26,6 +30,8 @@ export const newestProducts = [
       Spacing: "Fine-tune padding and margins for the entire section",
     },
     code: newArrival1,
+    js: newArrival1Javascript,
+    css: newArrival1Css,
     references: ["002"],
     launchedDate: "2025-01-20",
     lastModified: "2025-02-18",
@@ -67,7 +73,7 @@ export const newestProducts = [
       Typography: "Select custom fonts and adjust sizes for all text elements",
       Spacing: "Fine-tune padding and margins for the entire section",
     },
-    code: rehanSection,
+    code: newArrival1,
     references: ["002"],
     launchedDate: "2025-01-15",
     lastModified: "2025-02-10",
@@ -88,7 +94,9 @@ export const newestProducts = [
       Typography: "Select custom fonts and adjust sizes for all text elements",
       Spacing: "Fine-tune padding and margins for the entire section",
     },
-    code: rehanSection,
+    code: newArrival1,
+    js: newArrival1Javascript,
+    css: newArrival1Css,
     references: ["003", "002", "001"],
     launchedDate: "2025-01-15",
     lastModified: "2025-02-10",
@@ -158,7 +166,7 @@ export const newestProducts = [
   },
   {
     id: "008",
-    title: "Slider 007",
+    title: "new arrival 2 ",
     category: "Testimonial",
     keywords: ["rehan", "custom", "testimonial", "review"],
     media:
@@ -172,14 +180,16 @@ export const newestProducts = [
       Typography: "Select custom fonts and adjust sizes for all text elements",
       Spacing: "Fine-tune padding and margins for the entire section",
     },
-    code: rehanSection,
+    code: newArrival1,
+    js: newArrival1Javascript,
+    css: newArrival1Css,
     references: ["007"],
     launchedDate: "2025-01-15",
     lastModified: "2025-02-10",
   },
   {
     id: "009",
-    title: "Slider 008",
+    title: "pagefly 0010",
     category: "Testimonial",
     keywords: ["rehan", "custom", "testimonial", "review"],
     media:
@@ -193,7 +203,9 @@ export const newestProducts = [
       Typography: "Select custom fonts and adjust sizes for all text elements",
       Spacing: "Fine-tune padding and margins for the entire section",
     },
-    code: rehanSection,
+    code: newArrival1,
+    js: newArrival1Javascript,
+    css: newArrival1Css,
     references: ["008"],
     launchedDate: "2025-01-15",
     lastModified: "2025-02-10",
@@ -219,7 +231,7 @@ export const newestProducts = [
     launchedDate: "2025-01-15",
     lastModified: "2025-02-10",
   },
-   {
+  {
     id: "0011",
     title: "Slider 0010",
     category: "Testimonial",
@@ -235,7 +247,7 @@ export const newestProducts = [
       Typography: "Select custom fonts and adjust sizes for all text elements",
       Spacing: "Fine-tune padding and margins for the entire section",
     },
-    code: rehanSection,
+    code: newArrival1,
     references: ["0010"],
     launchedDate: "2025-01-15",
     lastModified: "2025-02-10",
@@ -250,7 +262,9 @@ export const sectionsCatalog = newestProducts.map((item) => ({
   imageUrl: item.media,
   sectionHandle: slugify(item.title),
   code: item.code,
-  price:item.price,
+  js: item.js,
+  css: item.css,
+  price: item.price,
   references: item.references,
   launchedDate: item.launchedDate,
   lastModified: item.lastModified,
