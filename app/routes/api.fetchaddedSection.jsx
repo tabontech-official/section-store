@@ -81,6 +81,9 @@ export const loader = async ({ request }) => {
       title: row.title || match?.title || rowTitle,
       imageUrl: row.imageUrl ?? match?.imageUrl ?? "",
       code: match?.code ?? "",
+      js:match?.js ?? "",
+      css:match?.css ?? "",
+      schema:match?.schema ?? ""
     };
   });
 

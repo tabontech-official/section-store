@@ -151,6 +151,7 @@ export default function SectionDashboard() {
           content: section.code,
           js: section.js,
           css: section.css,
+          schema:section.schema
         }),
       });
 
