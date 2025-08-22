@@ -41,7 +41,7 @@ api_version = "2025-07"
 scopes = "write_products,read_themes,write_themes"
 
 [auth]
-redirect_urls = ["https://sectify-ai-theme-builder.fly.dev/auth/callback", "https://holiday-affiliate-estimation-needed.trycloudflare.com/auth/shopify/callback", "https://holiday-affiliate-estimation-needed.trycloudflare.com/api/auth/callback"]
+redirect_urls = ["https://sectify-ai-theme-builder.fly.dev/auth/callback"]
 
 [pos]
 embedded = false
