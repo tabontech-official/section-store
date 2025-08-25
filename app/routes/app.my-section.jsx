@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+
 import {
   Page,
   Text,
@@ -184,16 +186,39 @@ export default function SectionDashboard() {
     closeAllPopovers();
   };
 
-  const themeItemsForSection = (section) =>
-    (themes || []).map((t) => ({
-      content: (
-        <InlineStack align="space-between" blockAlign="center">
-          <span>{t.name}</span>
-          <Badge tone={themeBadgeTone(t.role)}>{t.role}</Badge>
-        </InlineStack>
-      ),
-      onAction: () => handleAddToTheme(section, t),
-    }));
+  // const themeItemsForSection = (section) =>
+  //   (themes || []).map((t) => ({
+  //     content: (
+  //       <InlineStack align="space-between" blockAlign="center">
+  //         <span>{t.name}</span>
+  //         <Badge tone={themeBadgeTone(t.role)}>{t.role}</Badge>
+  //       </InlineStack>
+  //     ),
+  //     onAction: () => handleAddToTheme(section, t),
+  //   }));
+  
+  const themeItemsForSection = (section) => {
+  if (!themes || !themes.length) return [];
+
+  // Put "main" theme first
+  const sortedThemes = [...themes].sort((a, b) => {
+    if (a.role === "main") return -1;
+    if (b.role === "main") return 1;
+    return 0;
+  });
+
+  return sortedThemes.map((t) => ({
+    content: (
+      <InlineStack align="space-between" blockAlign="center">
+        <span>{t.name}</span>
+        <Badge tone={themeBadgeTone(t.role)}>{t.role}</Badge>
+      </InlineStack>
+    ),
+    onAction: () => handleAddToTheme(section, t),
+  }));
+};
+
+  
   const headerThemeItems = useMemo(
     () =>
       (themes || []).map((t) => {
@@ -367,93 +392,99 @@ export default function SectionDashboard() {
           </Popover>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "20px",
-            marginTop: 20,
-          }}
-        >
-          {addedSections.map((section, i) => {
-            const popoverActive = cardPopoverActiveIndex === i;
-            return (
-              <div
-                key={i}
+  <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "20px",
+        marginTop: 20,
+      }}
+    >
+      {addedSections.map((section, i) => {
+        const popoverActive = cardPopoverActiveIndex === i;
+        return (
+          <div
+            key={i}
+            style={{
+              width: 220,
+              border: "1px solid #ddd",
+              borderRadius: "10px",
+              overflow: "hidden",
+              background: "#fff",
+            }}
+          >
+            {/* Image */}
+            <div style={{ width: "100%", height: 120, overflow: "hidden" }}>
+              <img
+                src={section.imageUrl}
+                alt={section.sectionHandle}
                 style={{
-                  width: 220,
-                  border: "1px solid #ddd",
-                  borderRadius: "10px",
-                  overflow: "hidden",
-                  background: "#fff",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
                 }}
+              />
+            </div>
+
+            {/* Title + Icon */}
+            <div
+              style={{
+                padding: "10px 12px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Text fontWeight="medium" variant="bodySm">
+                {section.sectionHandle.replace(/-/g, " ")}
+              </Text>
+              <Icon source={ViewIcon} color="subdued" />
+            </div>
+
+            {/* Add to Theme Button */}
+            <div style={{ padding: "0 12px 12px" }}>
+              <Popover
+                active={popoverActive}
+                onClose={closeAllPopovers}
+                preferredAlignment="left"
+                sectioned={false}
+                activator={
+                <Button
+  fullWidth
+  variant="primary"
+  size="slim"
+  disabled={addedToThemeIds.includes(section.sectionHandle)}
+  onClick={() => openCardPopover(i)}
+  loading={themesLoading && popoverActive}
+>
+  <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%" }}>
+    {addedToThemeIds.includes(section.sectionHandle)
+      ? "Already Added"
+      : "Add to theme"}
+    {!addedToThemeIds.includes(section.sectionHandle) && (
+      <MdOutlineKeyboardArrowDown  style={{ marginLeft: 4, fontSize: 18 }} />
+    )}
+  </span>
+</Button>
+                }
               >
-                <div style={{ width: "100%", height: 120, overflow: "hidden" }}>
-                  <img
-                    src={section.imageUrl}
-                    alt={section.sectionHandle}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
+                <div style={{ minWidth: "160px", maxWidth: "220px" }}>
+                  <ActionList
+                    items={
+                      themesLoading
+                        ? [{ content: "Loading themes..." }]
+                        : themes?.length
+                        ? themeItemsForSection(section)
+                        : [{ content: "No themes found" }]
+                    }
                   />
                 </div>
-
-                <div
-                  style={{
-                    padding: "10px 12px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text fontWeight="medium" variant="bodySm">
-                    {section.sectionHandle.replace(/-/g, " ")}
-                  </Text>
-                  <Icon source={ViewIcon} color="subdued" />
-                </div>
-
-            <div style={{ padding: "0 12px 12px" }}>
-                  <Popover
-                    active={popoverActive}
-                    onClose={closeAllPopovers}
-                    preferredAlignment="left"
-                    sectioned={false}
-                    activator={
-                      <Button
-                        fullWidth
-                        variant="primary"
-                        size="slim"
-                        disabled={addedToThemeIds.includes(
-                          section.sectionHandle,
-                        )}
-                        onClick={() => openCardPopover(i)}
-                        loading={themesLoading && popoverActive}
-                      >
-                        {addedToThemeIds.includes(section.sectionHandle)
-                          ? "Already Added"
-                          : "Add to theme"}
-                      </Button>
-                    }
-                  >
-                    <div style={{ minWidth: "160px", maxWidth: "220px" }}>
-                      <ActionList
-                        items={
-                          themesLoading
-                            ? [{ content: "Loading themes..." }]
-                            : themes?.length
-                              ? themeItemsForSection(section)
-                              : [{ content: "No themes found" }]
-                        }
-                      />
-                    </div>
-                  </Popover>
-                </div> 
-           
-              </div>
-            );
-          })}
-        </div>
+              </Popover>
+            </div>
+          </div>
+        );
+      })}
+    </div>
 
         <div style={{ marginTop: 40 }}>
           <Text variant="headingMd" fontWeight="medium">

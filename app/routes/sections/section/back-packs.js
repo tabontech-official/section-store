@@ -1,39 +1,4 @@
-// export const code = `
-// <section id="wishlist-star-section-{{ section.id }}"></section>
-
-// <script>
-// document.addEventListener("DOMContentLoaded", function () {
-//   var isEmbedEnabled = document.querySelector('meta[name="wishlist-app-enabled"]');
-
-//   if (isEmbedEnabled) {
-//     console.log("App Embed Enabled - Section content injected");
-
-//     const sectionEl = document.getElementById("wishlist-star-section-{{ section.id }}");
-//     sectionEl.innerHTML = \`
-//      <div style="padding:20px; background:#f0f0f0; margin:20px;">
-//         <h2 style="color:#111;">Wishlist Feature Active </h2>
-//       </div>
-//     \`;
-
-//   } else {
-//     console.log("App Embed Disabled - Content skipped");
-//   }
-// });
-// </script>
-
-// {% schema %}
-// {
-//   "name": "sami testing 123",
-//   "settings": [],
-//   "presets": [
-//     { "name": "sami testing 123" }
-//   ]
-// }
-// {% endschema %}
-
-// `;
-
-export const code = `
+    export const code = `
 <section id="wishlist-star-section-{{ section.id }}"
   class="btb btb-{{ section.id }} color-{{ section.settings.color_scheme }}"
   data-section-id="{{ section.id }}">
@@ -70,13 +35,21 @@ export const code = `
                 {% else %}
                   {{ 'image' | placeholder_svg_tag: 'btb-card__img btb-card__img--placeholder' }}
                 {% endif %}
+                {% if block.settings.sold_out %}
+                  <span class="btb-card__badge btb-card__badge--soldout">Sold out</span>
+                {% elsif block.settings.on_sale %}
+                  <span class="btb-card__badge btb-card__badge--sale">Sale</span>
+                {% endif %}
               </div>
               <div class="btb-card__content">
                 {% if block.settings.title != blank %}
                   <h3 class="btb-card__title">{{ block.settings.title }}</h3>
                 {% endif %}
-                {% if block.settings.caption != blank %}
-                  <p class="btb-card__caption">{{ block.settings.caption }}</p>
+                {% if block.settings.price != blank %}
+                  <p class="btb-card__price">{{ block.settings.price }}</p>
+                {% endif %}
+                {% if block.settings.compare_at_price != blank %}
+                  <p class="btb-card__compare"><s>{{ block.settings.compare_at_price }}</s></p>
                 {% endif %}
                 {% if block.settings.button_label != blank and block.settings.button_link != blank %}
                   <a class="btb-card__btn button"
@@ -104,13 +77,21 @@ export const code = `
               {% else %}
                 {{ 'image' | placeholder_svg_tag: 'btb-card__img btb-card__img--placeholder' }}
               {% endif %}
+              {% if block.settings.sold_out %}
+                <span class="btb-card__badge btb-card__badge--soldout">Sold out</span>
+              {% elsif block.settings.on_sale %}
+                <span class="btb-card__badge btb-card__badge--sale">Sale</span>
+              {% endif %}
             </div>
             <div class="btb-card__content">
               {% if block.settings.title != blank %}
                 <h3 class="btb-card__title">{{ block.settings.title }}</h3>
               {% endif %}
-              {% if block.settings.caption != blank %}
-                <p class="btb-card__caption">{{ block.settings.caption }}</p>
+              {% if block.settings.price != blank %}
+                <p class="btb-card__price">{{ block.settings.price }}</p>
+              {% endif %}
+              {% if block.settings.compare_at_price != blank %}
+                <p class="btb-card__compare"><s>{{ block.settings.compare_at_price }}</s></p>
               {% endif %}
               {% if block.settings.button_label != blank and block.settings.button_link != blank %}
                 <a class="btb-card__btn button"
@@ -130,25 +111,26 @@ export const code = `
 <style>
   .btb-{{ section.id }} .btb-card { opacity:0; transform:translateY(10px); transition:.5s ease; }
   .btb-{{ section.id }} .btb-card.is-in { opacity:1; transform:none; }
+  .btb-{{ section.id }} .btb-card__badge { position:absolute; top:8px; left:8px; padding:2px 8px; font-size:12px; border-radius:4px; background:#111; color:#fff; }
+  .btb-{{ section.id }} .btb-card__badge--sale { background:#2563eb; }
+  .btb-{{ section.id }} .btb-card__badge--soldout { background:#000; }
+  .btb-{{ section.id }} .btb-card__price { font-weight:600; }
+  .btb-{{ section.id }} .btb-card__compare { color:#888; font-size:14px; }
 </style>
-
 
 <script>
 document.addEventListener("DOMContentLoaded", function(){
   const embed = document.querySelector('meta[name="wishlist-app-enabled"]');
   const root = document.querySelector("#wishlist-star-section-{{ section.id }}");
-
-  if(!embed && root){ root.style.display = "none"; return; }
+    if(!embed && root){ root.style.display = "none"; return; }
 
   if(root){
-    // Fade-in
     const cards = root.querySelectorAll(".btb-card");
     const io = new IntersectionObserver(entries=>{
       entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add("is-in"); });
     },{threshold:0.2});
     cards.forEach(c=>io.observe(c));
 
-    // Slider nav (only if exists)
     const track = root.querySelector(".btb__track");
     const prev = root.querySelector(".btb__nav--prev");
     const next = root.querySelector(".btb__nav--next");
@@ -168,74 +150,43 @@ document.addEventListener("DOMContentLoaded", function(){
       next.addEventListener("click",()=>track.scrollBy({left:step(),behavior:"smooth"}));
       track.addEventListener("scroll",update,{passive:true});
       update();
-
-      {% if section.settings.autoplay %}
-      let timer=null;
-      function start(){ stop(); timer=setInterval(()=>{
-        const maxScroll=track.scrollWidth-track.clientWidth-2;
-        if(track.scrollLeft>=maxScroll) track.scrollTo({left:0,behavior:"smooth"});
-        else track.scrollBy({left:step(),behavior:"smooth"});
-      }, {{ section.settings.autoplay_interval | times:1000 }});}
-      function stop(){ if(timer) clearInterval(timer); }
-      start(); root.addEventListener("mouseenter",stop); root.addEventListener("mouseleave",start);
-      {% endif %}
     }
   }
 });
 </script>
 
-
-
-
-
-
 {% schema %}
 {
-  "name": "Behind the Brand 4",
-  "settings": [
-    { "type": "text", "id": "main_heading", "label": "Main heading", "default": "About Us" },
-    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Behind the brand" },
-    { "type": "range", "id": "columns_desktop", "min": 2, "max": 4, "step": 1, "label": "Columns on desktop", "default": 3 },
-    { "type": "range", "id": "columns_tablet", "min": 1, "max": 3, "step": 1, "label": "Columns on tablet", "default": 2 },
-    { "type": "range", "id": "columns_mobile", "min": 1, "max": 3, "step": 1, "label": "Columns on mobile", "default": 1 },
-    { "type": "range", "id": "card_gap", "min": 6, "max": 48, "step": 6, "label": "Card gap (px)", "default": 24 },
-    { "type": "range", "id": "arch_radius", "min": 120, "max": 480, "step": 60, "label": "Top arch radius (px)", "default": 300 },
-    { "type": "select", "id": "image_aspect", "label": "Image aspect ratio", "options": [
-        { "value": "3 / 4", "label": "3:4" },
-        { "value": "2 / 3", "label": "2:3" },
-        { "value": "4 / 5", "label": "4:5" },
-        { "value": "1 / 1", "label": "1:1" }
-      ], "default": "3 / 4"
-    },
-    { "type": "checkbox", "id": "enable_slider", "label": "Enable slider when more than 4 blocks", "default": true },
-    { "type": "checkbox", "id": "autoplay", "label": "Autoplay (slider only)", "default": true },
-    { "type": "range", "id": "autoplay_interval", "min": 3, "max": 12, "step": 1, "label": "Autoplay interval (seconds)", "default": 5 }
-  ],
+  "name": "Backpack 101",
+"settings": [
+  { "type": "text", "id": "main_heading", "label": "Main heading", "default": "Backpacks" },
+  { "type": "text", "id": "subheading", "label": "Subheading", "default": "Our featured products" },
+  { "type": "range", "id": "columns_desktop", "min": 2, "max": 4, "step": 1, "label": "Columns on desktop", "default": 3 },
+  { "type": "range", "id": "columns_tablet", "min": 1, "max": 3, "step": 1, "label": "Columns on tablet", "default": 2 },
+  { "type": "range", "id": "columns_mobile", "min": 1, "max": 3, "step": 1, "label": "Columns on mobile", "default": 1 },
+  { "type": "checkbox", "id": "enable_slider", "label": "Enable slider when more than 4 blocks", "default": false }
+],
+
   "blocks": [
     {
-      "type": "person",
-      "name": "Brand member",
+      "type": "product",
+      "name": "Product Card",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Image" },
-        { "type": "text", "id": "title", "label": "Title / Name", "default": "Member name" },
-        { "type": "text", "id": "caption", "label": "Caption", "default": "Short role/description" },
-        { "type": "text", "id": "button_label", "label": "Button label", "default": "Learn more" },
-        { "type": "url", "id": "button_link", "label": "Button link" },
+        { "type": "image_picker", "id": "image", "label": "Product Image" },
+        { "type": "text", "id": "title", "label": "Product Title", "default": "Backpack name" },
+        { "type": "text", "id": "price", "label": "Price", "default": "$98.00 USD" },
+        { "type": "text", "id": "compare_at_price", "label": "Compare at Price" },
+        { "type": "checkbox", "id": "on_sale", "label": "Show Sale Badge", "default": false },
+        { "type": "checkbox", "id": "sold_out", "label": "Show Sold Out Badge", "default": false },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "View Product" },
+        { "type": "url", "id": "button_link", "label": "Product link" },
         { "type": "checkbox", "id": "open_new_tab", "label": "Open link in new tab", "default": false }
       ]
     }
   ],
   "presets": [
-    { "name": "Behind the Brand 4", "blocks": [ { "type": "person" }, { "type": "person" }, { "type": "person" } ] }
+    { "name": "Backpack 101", "blocks": [ { "type": "product" }, { "type": "product" }, { "type": "product" } ] }
   ]
 }
 {% endschema %}
-
-
-
-
-
-
-
 `;
-

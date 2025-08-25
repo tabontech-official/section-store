@@ -1,4 +1,3 @@
-// app/routes/app/confirm-subscription.jsx
 import { json, redirect } from "@remix-run/node";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
@@ -24,5 +23,5 @@ export const loader = async ({ request }) => {
 };
 
 export default function ConfirmSubscription() {
-  return null; // just redirects
+  return null; 
 }

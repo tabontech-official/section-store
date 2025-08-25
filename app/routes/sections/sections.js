@@ -1,4 +1,10 @@
 import { code as rehanSection } from "./section/rehan-section-001";
+import { code as Backpack } from "./section/back-packs";
+import {code as featuredSection} from "./section/featured-section"
+import {code as circleSection} from './section/circle-banner'
+import {code as collectionGrid} from "./section/collection-grid"
+import {code as counterSection} from "./section/counter"
+
 import {
   code as newArrival1,
   newArrival1Javascript,
@@ -16,9 +22,9 @@ function slugify(str = "") {
 export const newestProducts = [
   {
     id: "001",
-    title: "Slider 101",
-    category: "Popular",
-    keywords: ["slider", "layout", "new", "arrival"],
+    title: "new Backpack 101",
+    category: "Slider",
+    keywords: ["slider", "layout", "new", "arrival","Backpack"],
     media:
       "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/buy_it_now.png",
     type: "image",
@@ -30,7 +36,7 @@ export const newestProducts = [
       Typography: "Select custom fonts and adjust sizes for all text elements",
       Spacing: "Fine-tune padding and margins for the entire section",
     },
-    code: rehanSection,
+    code: Backpack,
     js: newArrival1Javascript,
     css: newArrival1Css,
     schema: newArrival1Schema,
@@ -40,9 +46,9 @@ export const newestProducts = [
   },
   {
     id: "002",
-    title: "Rehan Section 102",
+    title: "Featured Section 102",
     category: "Popular",
-    keywords: ["rehan", "custom", "testimonial", "review"],
+    keywords: ["rehan", "custom", "testimonial", "review","featured"],
     media:
       "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/buy_it_now.png",
     type: "image",
@@ -54,7 +60,7 @@ export const newestProducts = [
       Typography: "Select custom fonts and adjust sizes for all text elements",
       Spacing: "Fine-tune padding and margins for the entire section",
     },
-    code: rehanSection,
+    code: featuredSection,
     js: newArrival1Javascript,
     css: newArrival1Css,
     schema: newArrival1Schema,
@@ -65,9 +71,9 @@ export const newestProducts = [
   },
   {
     id: "003",
-    title: "sami Section 103",
+    title: "Circle Banner 103",
     category: "Popular",
-    keywords: ["rehan", "custom", "testimonial", "review"],
+    keywords: ["rehan", "custom", "testimonial", "review","circle banner"],
     media:
       "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/buy_it_now.png",
     type: "image",
@@ -79,7 +85,7 @@ export const newestProducts = [
       Typography: "Select custom fonts and adjust sizes for all text elements",
       Spacing: "Fine-tune padding and margins for the entire section",
     },
-    code: rehanSection,
+    code: circleSection,
     js: newArrival1Javascript,
     css: newArrival1Css,
     schema: newArrival1Schema,
@@ -90,9 +96,9 @@ export const newestProducts = [
   },
   {
     id: "004",
-    title: "Collection",
+    title: "Collection Grid 104",
     category: "Popular",
-    keywords: ["rehan", "custom", "testimonial", "review"],
+    keywords: ["rehan", "custom", "testimonial", "review","collection"],
     media:
       "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/buy_it_now.png",
     type: "image",
@@ -104,7 +110,7 @@ export const newestProducts = [
       Typography: "Select custom fonts and adjust sizes for all text elements",
       Spacing: "Fine-tune padding and margins for the entire section",
     },
-    code: rehanSection,
+    code: collectionGrid,
     js: newArrival1Javascript,
     css: newArrival1Css,
     schema: newArrival1Schema,
@@ -115,9 +121,9 @@ export const newestProducts = [
   },
   {
     id: "005",
-    title: "New Slider 105",
+    title: "Flip Counter 105",
     category: "Popular",
-    keywords: ["rehan", "custom", "testimonial", "review"],
+    keywords: ["rehan", "custom", "testimonial", "review","counter"],
     media:
       "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/buy_it_now.png",
     type: "image",
@@ -129,7 +135,32 @@ export const newestProducts = [
       Typography: "Select custom fonts and adjust sizes for all text elements",
       Spacing: "Fine-tune padding and margins for the entire section",
     },
-    code: rehanSection,
+    code: counterSection,
+    js: newArrival1Javascript,
+    css: newArrival1Css,
+    schema: newArrival1Schema,
+
+    references: ["004"],
+    launchedDate: "2025-01-15",
+    lastModified: "2025-02-10",
+  },
+    {
+    id: "006",
+    title: "Flip Counter 106",
+    category: "Popular",
+    keywords: ["rehan", "custom", "testimonial", "review","counter"],
+    media:
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/buy_it_now.png",
+    type: "image",
+    price: "Free",
+    details: {
+      "Slider Layout": "Adjust number of visible slides, spacing, and width",
+      Colors: "Change background, text, button, and navigation colors",
+      Button: 'Modify text, link, size, and style of the "View All" button',
+      Typography: "Select custom fonts and adjust sizes for all text elements",
+      Spacing: "Fine-tune padding and margins for the entire section",
+    },
+    code: counterSection,
     js: newArrival1Javascript,
     css: newArrival1Css,
     schema: newArrival1Schema,

@@ -122,29 +122,82 @@ Don't explain anything — just return keywords like 'testimonial', 'slider', or
 };
 
   const [isFullPageMode, setIsFullPageMode] = useState(false);
+const [pendingSection, setPendingSection] = useState(null);
+const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
 
-  const handleUserInput = async () => {
-    if (!userInput.trim()) return;
 
-    const newMessages = [...messages, { text: userInput, sender: "user" }];
-    setMessages(newMessages);
-    setUserInput("");
-    const isPageIntent = /page|homepage|landing|full/i.test(userInput);
-    setIsFullPageMode(isPageIntent);
-    const gptReply = await fetchChatGPTResponse(userInput);
-    const matched = getRelevantSections(gptReply);
+const handleUserInput = async () => {
+  if (!userInput.trim()) return;
 
-    setMessages((prev) => [...prev, { text: gptReply, sender: "bot" }]);
+  const newMessages = [...messages, { text: userInput, sender: "user" }];
+  setMessages(newMessages);
+  setUserInput("");
+
+  if (awaitingConfirmation && pendingSection) {
+    if (/yes|ok|sure|ofcourse|okey|okay/i.test(userInput)) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: `Perfect  I’ll create the ${pendingSection.category} section for you.`,
+          sender: "bot"
+        },
+        {
+          text: `Tip: Many merchants also add *Testimonials* or a *Featured Collection* section along with ${pendingSection.category}. Would you like me to suggest those too?`,
+          sender: "bot"
+        }
+      ]);
+
+      setMatchedSections([pendingSection]);
+      setAwaitingConfirmation(false);
+      setPendingSection(null);
+    } else {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "Got it No problem. What kind of section would you like instead?",
+          sender: "bot"
+        }
+      ]);
+      setAwaitingConfirmation(false);
+      setPendingSection(null);
+    }
+    return;
+  }
+
+  const gptReply = await fetchChatGPTResponse(userInput);
+  const matched = getRelevantSections(gptReply);
+
+  if (matched.length === 1) {
+    setPendingSection(matched[0]);
+    setAwaitingConfirmation(true);
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: `Got it. You’re asking for a **${matched[0].category}** section. Do you want me to generate this for you now?`,
+        sender: "bot"
+      }
+    ]);
+  } else if (matched.length > 1) {
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: "I found multiple section types that might fit your request  Which one would you like me to generate?",
+        sender: "bot"
+      }
+    ]);
     setMatchedSections(matched);
+  } else {
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: "Hmm  I couldn’t find a matching section. Can you describe it in another way?",
+        sender: "bot"
+      }
+    ]);
+  }
+};
 
-    setPageSections((prev) => {
-      const existing = new Set(prev.map((sec) => sec.title));
-      const newUnique = matched
-        .filter((sec) => !existing.has(sec.title))
-        .map((sec) => ({ ...sec, customCss: "" }));
-      return [...prev, ...newUnique];
-    });
-  };
+
 
   const openPreview = (item) => {
     setPreviewData(item);

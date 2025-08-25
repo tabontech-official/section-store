@@ -4,7 +4,7 @@ client_id = "55a6062f245076f51654a65839944fbe"
 name = "Sectify - AI Theme Builder"
 handle = "sectify-ai-theme-builder"
 
-application_url = "https://county-clearing-dame-hill.trycloudflare.com"
+application_url = "https://sectify-ai-theme-builder.fly.dev/"
 
 
 embedded = true
@@ -45,7 +45,7 @@ scopes = "write_products,read_themes,write_themes"
 
 [auth]
 
-redirect_urls = ["https://county-clearing-dame-hill.trycloudflare.com/auth/callback", "https://county-clearing-dame-hill.trycloudflare.com/auth/shopify/callback", "https://county-clearing-dame-hill.trycloudflare.com/api/auth/callback"]
+redirect_urls = ["https://sectify-ai-theme-builder.fly.dev/auth/callback"]
 
 
 
