@@ -23,10 +23,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 {% schema %}
 {
-  "name": "Wishlist 2 Section",
+  "name": "sami testing 123",
   "settings": [],
   "presets": [
-    { "name": "Wishlist 2 Section" }
+    { "name": "sami testing 123" }
   ]
 }
 {% endschema %}

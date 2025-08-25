@@ -3,7 +3,7 @@
 client_id = "55a6062f245076f51654a65839944fbe"
 name = "Sectify - AI Theme Builder"
 handle = "sectify-ai-theme-builder"
-application_url = "https://sectify-ai-theme-builder.fly.dev/"
+application_url = "https://way-customers-chemistry-meanwhile.trycloudflare.com"
 embedded = true
 
 [build]
@@ -41,7 +41,7 @@ api_version = "2025-07"
 scopes = "write_products,read_themes,write_themes"
 
 [auth]
-redirect_urls = ["https://sectify-ai-theme-builder.fly.dev/auth/callback"]
+redirect_urls = ["https://way-customers-chemistry-meanwhile.trycloudflare.com/auth/callback", "https://way-customers-chemistry-meanwhile.trycloudflare.com/auth/shopify/callback", "https://way-customers-chemistry-meanwhile.trycloudflare.com/api/auth/callback"]
 
 [pos]
 embedded = false

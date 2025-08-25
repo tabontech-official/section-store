@@ -35,7 +35,6 @@ const shopify = shopifyApp({
       interval: BillingInterval.Every30Days,
       trialDays: 14,
     },
-    // Starter is free so not listed here as it's considered a default/no billing case
   },
   
   future: {
