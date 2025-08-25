@@ -413,7 +413,7 @@ export default function SectionDashboard() {
                   <Icon source={ViewIcon} color="subdued" />
                 </div>
 
-                {/* <div style={{ padding: "0 12px 12px" }}>
+            <div style={{ padding: "0 12px 12px" }}>
                   <Popover
                     active={popoverActive}
                     onClose={closeAllPopovers}
@@ -448,50 +448,8 @@ export default function SectionDashboard() {
                       />
                     </div>
                   </Popover>
-                </div> */}
-                <div style={{ padding: "0 12px 12px" }}>
-                  {addedToThemeIds.includes(section.sectionHandle) ? (
-                    <Button
-                      fullWidth
-                      tone="critical"
-                      size="slim"
-                      onClick={() => handleRemoveFromTheme(section)}
-                    >
-                      Delete from theme
-                    </Button>
-                  ) : (
-                    // ✅ Agar abhi add nahi hua hai
-                    <Popover
-                      active={popoverActive}
-                      onClose={closeAllPopovers}
-                      preferredAlignment="left"
-                      sectioned={false}
-                      activator={
-                        <Button
-                          fullWidth
-                          variant="primary"
-                          size="slim"
-                          onClick={() => openCardPopover(i)}
-                          loading={themesLoading && popoverActive}
-                        >
-                          Add to theme
-                        </Button>
-                      }
-                    >
-                      <div style={{ minWidth: "160px", maxWidth: "220px" }}>
-                        <ActionList
-                          items={
-                            themesLoading
-                              ? [{ content: "Loading themes..." }]
-                              : themes?.length
-                                ? themeItemsForSection(section)
-                                : [{ content: "No themes found" }]
-                          }
-                        />
-                      </div>
-                    </Popover>
-                  )}
-                </div>
+                </div> 
+           
               </div>
             );
           })}

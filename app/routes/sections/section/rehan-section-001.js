@@ -313,6 +313,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 {% schema %}
 {
+<<<<<<< HEAD
   "name": "Behind the Brand",
   "tag": "section",
   "class": "section",
@@ -396,6 +397,12 @@ document.addEventListener("DOMContentLoaded", function () {
         { "type": "person" }
       ]
     }
+=======
+  "name": "sami testing 123",
+  "settings": [],
+  "presets": [
+    { "name": "sami testing 123" }
+>>>>>>> 509b2313b9471035f662809febcacc33d7979c0a
   ]
 }
 {% endschema %}

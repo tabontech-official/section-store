@@ -16,7 +16,7 @@ function slugify(str = "") {
 export const newestProducts = [
   {
     id: "001",
-    title: "Animated Slider",
+    title: "Slider 101",
     category: "Popular",
     keywords: ["slider", "layout", "new", "arrival"],
     media:
@@ -40,7 +40,7 @@ export const newestProducts = [
   },
   {
     id: "002",
-    title: "Rehan Section 78",
+    title: "Rehan Section 102",
     category: "Popular",
     keywords: ["rehan", "custom", "testimonial", "review"],
     media:
@@ -65,7 +65,7 @@ export const newestProducts = [
   },
   {
     id: "003",
-    title: "sami Section 003",
+    title: "sami Section 103",
     category: "Popular",
     keywords: ["rehan", "custom", "testimonial", "review"],
     media:
@@ -90,7 +90,7 @@ export const newestProducts = [
   },
   {
     id: "004",
-    title: "Behind the Brand",
+    title: "Collection",
     category: "Popular",
     keywords: ["rehan", "custom", "testimonial", "review"],
     media:
@@ -115,7 +115,7 @@ export const newestProducts = [
   },
   {
     id: "005",
-    title: "New Slider",
+    title: "New Slider 105",
     category: "Popular",
     keywords: ["rehan", "custom", "testimonial", "review"],
     media:
