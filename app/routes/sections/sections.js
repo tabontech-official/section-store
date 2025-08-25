@@ -90,7 +90,7 @@ export const newestProducts = [
   },
   {
     id: "004",
-    title: "testimonial 104",
+    title: "Collection",
     category: "Popular",
     keywords: ["rehan", "custom", "testimonial", "review"],
     media:
