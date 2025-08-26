@@ -33,7 +33,7 @@ model Session {
 
 model SectionStatus {
   id             String   @id @default(cuid())
-  sectionHandle  String   @unique
+  sectionHandle  String   
   shop           String   @default("unknown-shop")
   status         String
   imageUrl       String?  
