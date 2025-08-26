@@ -32,12 +32,16 @@ import {
   LogoYoutubeIcon,
   SendIcon,
 } from "@shopify/polaris-icons";
+import { useNavigate } from "@remix-run/react";
 
 export default function GuideLine() {
   const [openCollapse, setOpenCollapse] = useState(false);
 
   const toggleCollapse = () => setOpenCollapse(!openCollapse);
-
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate("/app/help/center"); // Navigate to the help center page
+  };
   return (
     <Frame>
       <Page fullWidth>
@@ -204,7 +208,7 @@ export default function GuideLine() {
                       Get Support
                     </Button>
 
-                    <Button size="slim" icon={LiveIcon}>
+                    <Button size="slim" icon={LiveIcon} onClick={handleClick}>
                       FAQ
                     </Button>
                   </InlineStack>
