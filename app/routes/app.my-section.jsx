@@ -153,7 +153,7 @@ export default function SectionDashboard() {
           content: section.code,
           js: section.js,
           css: section.css,
-          schema:section.schema
+          schema: section.schema,
         }),
       });
 
@@ -196,29 +196,28 @@ export default function SectionDashboard() {
   //     ),
   //     onAction: () => handleAddToTheme(section, t),
   //   }));
-  
+
   const themeItemsForSection = (section) => {
-  if (!themes || !themes.length) return [];
+    if (!themes || !themes.length) return [];
 
-  // Put "main" theme first
-  const sortedThemes = [...themes].sort((a, b) => {
-    if (a.role === "main") return -1;
-    if (b.role === "main") return 1;
-    return 0;
-  });
+    // Put "main" theme first
+    const sortedThemes = [...themes].sort((a, b) => {
+      if (a.role === "main") return -1;
+      if (b.role === "main") return 1;
+      return 0;
+    });
 
-  return sortedThemes.map((t) => ({
-    content: (
-      <InlineStack align="space-between" blockAlign="center">
-        <span>{t.name}</span>
-        <Badge tone={themeBadgeTone(t.role)}>{t.role}</Badge>
-      </InlineStack>
-    ),
-    onAction: () => handleAddToTheme(section, t),
-  }));
-};
+    return sortedThemes.map((t) => ({
+      content: (
+        <InlineStack align="space-between" blockAlign="center">
+          <span>{t.name}</span>
+          <Badge tone={themeBadgeTone(t.role)}>{t.role}</Badge>
+        </InlineStack>
+      ),
+      onAction: () => handleAddToTheme(section, t),
+    }));
+  };
 
-  
   const headerThemeItems = useMemo(
     () =>
       (themes || []).map((t) => {
@@ -287,7 +286,19 @@ export default function SectionDashboard() {
         }
       });
   }, []);
+  const isToday = (dateStr) => {
+    const d = new Date(dateStr);
+    const now = new Date();
+    return (
+      d.getFullYear() === now.getFullYear() &&
+      d.getMonth() === now.getMonth() &&
+      d.getDate() === now.getDate()
+    );
+  };
 
+  // split into today + history
+  const todaySections = addedSections.filter((s) => isToday(s.createdAt));
+  const historySections = addedSections.filter((s) => !isToday(s.createdAt));
   return (
     <Frame>
       {themesLoading && <Loading />}
@@ -391,101 +402,318 @@ export default function SectionDashboard() {
             </div>
           </Popover>
         </div>
-
-  <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "20px",
-        marginTop: 20,
-      }}
-    >
-      {addedSections.map((section, i) => {
-        const popoverActive = cardPopoverActiveIndex === i;
-        return (
-          <div
-            key={i}
-            style={{
-              width: 220,
-              border: "1px solid #ddd",
-              borderRadius: "10px",
-              overflow: "hidden",
-              background: "#fff",
-            }}
-          >
-            {/* Image */}
-            <div style={{ width: "100%", height: 120, overflow: "hidden" }}>
-              <img
-                src={section.imageUrl}
-                alt={section.sectionHandle}
+{/* 
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "20px",
+            marginTop: 20,
+          }}
+        >
+          {addedSections.map((section, i) => {
+            const popoverActive = cardPopoverActiveIndex === i;
+            return (
+              <div
+                key={i}
                 style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
+                  width: 220,
+                  border: "1px solid #ddd",
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                  background: "#fff",
                 }}
-              />
-            </div>
-
-            {/* Title + Icon */}
-            <div
-              style={{
-                padding: "10px 12px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Text fontWeight="medium" variant="bodySm">
-                {section.sectionHandle.replace(/-/g, " ")}
-              </Text>
-              <Icon source={ViewIcon} color="subdued" />
-            </div>
-
-            {/* Add to Theme Button */}
-            <div style={{ padding: "0 12px 12px" }}>
-              <Popover
-                active={popoverActive}
-                onClose={closeAllPopovers}
-                preferredAlignment="left"
-                sectioned={false}
-                activator={
-                <Button
-  fullWidth
-  variant="primary"
-  size="slim"
-  disabled={addedToThemeIds.includes(section.sectionHandle)}
-  onClick={() => openCardPopover(i)}
-  loading={themesLoading && popoverActive}
->
-  <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%" }}>
-    {addedToThemeIds.includes(section.sectionHandle)
-      ? "Already Added"
-      : "Add to theme"}
-    {!addedToThemeIds.includes(section.sectionHandle) && (
-      <MdOutlineKeyboardArrowDown  style={{ marginLeft: 4, fontSize: 18 }} />
-    )}
-  </span>
-</Button>
-                }
               >
-                <div style={{ minWidth: "160px", maxWidth: "220px" }}>
-                  <ActionList
-                    items={
-                      themesLoading
-                        ? [{ content: "Loading themes..." }]
-                        : themes?.length
-                        ? themeItemsForSection(section)
-                        : [{ content: "No themes found" }]
-                    }
+                <div style={{ width: "100%", height: 120, overflow: "hidden" }}>
+                  <img
+                    src={section.imageUrl}
+                    alt={section.sectionHandle}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
                   />
                 </div>
-              </Popover>
-            </div>
-          </div>
-        );
-      })}
-    </div>
 
+                <div
+                  style={{
+                    padding: "10px 12px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text fontWeight="medium" variant="bodySm">
+                    {section.sectionHandle.replace(/-/g, " ")}
+                  </Text>
+                  <Icon source={ViewIcon} color="subdued" />
+                </div>
+
+                <div style={{ padding: "0 12px 12px" }}>
+                  <Popover
+                    active={popoverActive}
+                    onClose={closeAllPopovers}
+                    preferredAlignment="left"
+                    sectioned={false}
+                    activator={
+                      <Button
+                        fullWidth
+                        variant="primary"
+                        size="slim"
+                        disabled={addedToThemeIds.includes(
+                          section.sectionHandle,
+                        )}
+                        onClick={() => openCardPopover(i)}
+                        loading={themesLoading && popoverActive}
+                      >
+                        <span
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: "100%",
+                          }}
+                        >
+                          {addedToThemeIds.includes(section.sectionHandle)
+                            ? "Already Added"
+                            : "Add to theme"}
+                          {!addedToThemeIds.includes(section.sectionHandle) && (
+                            <MdOutlineKeyboardArrowDown
+                              style={{ marginLeft: 4, fontSize: 18 }}
+                            />
+                          )}
+                        </span>
+                      </Button>
+                    }
+                  >
+                    <div style={{ minWidth: "160px", maxWidth: "220px" }}>
+                      <ActionList
+                        items={
+                          themesLoading
+                            ? [{ content: "Loading themes..." }]
+                            : themes?.length
+                              ? themeItemsForSection(section)
+                              : [{ content: "No themes found" }]
+                        }
+                      />
+                    </div>
+                  </Popover>
+                </div>
+              </div>
+            );
+          })}
+        </div> */}
+   {todaySections.length > 0 && (
+      <div style={{ marginTop: 30 }}>
+        <Text variant="headingMd" fontWeight="medium">Today</Text>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "20px",
+            marginTop: 20,
+          }}
+        >
+          {todaySections.map((section, i) => {
+            const popoverActive = cardPopoverActiveIndex === i;
+            return (
+              <div
+                key={i}
+                style={{
+                  width: 220,
+                  border: "1px solid #ddd",
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                  background: "#fff",
+                }}
+              >
+                <div style={{ width: "100%", height: 120, overflow: "hidden" }}>
+                  <img
+                    src={section.imageUrl}
+                    alt={section.sectionHandle}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+
+                <div
+                  style={{
+                    padding: "10px 12px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text fontWeight="medium" variant="bodySm">
+                    {section.sectionHandle.replace(/-/g, " ")}
+                  </Text>
+                  <Icon source={ViewIcon} color="subdued" />
+                </div>
+
+                <div style={{ padding: "0 12px 12px" }}>
+                  <Popover
+                    active={popoverActive}
+                    onClose={closeAllPopovers}
+                    preferredAlignment="left"
+                    sectioned={false}
+                    activator={
+                      <Button
+                        fullWidth
+                        variant="primary"
+                        size="slim"
+                        disabled={addedToThemeIds.includes(section.sectionHandle)}
+                        onClick={() => openCardPopover(i)}
+                        loading={themesLoading && popoverActive}
+                      >
+                        <span
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: "100%",
+                          }}
+                        >
+                          {addedToThemeIds.includes(section.sectionHandle)
+                            ? "Already Added"
+                            : "Add to theme"}
+                          {!addedToThemeIds.includes(section.sectionHandle) && (
+                            <MdOutlineKeyboardArrowDown
+                              style={{ marginLeft: 4, fontSize: 18 }}
+                            />
+                          )}
+                        </span>
+                      </Button>
+                    }
+                  >
+                    <div style={{ minWidth: "160px", maxWidth: "220px" }}>
+                      <ActionList
+                        items={
+                          themesLoading
+                            ? [{ content: "Loading themes..." }]
+                            : themes?.length
+                              ? themeItemsForSection(section)
+                              : [{ content: "No themes found" }]
+                        }
+                      />
+                    </div>
+                  </Popover>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    )}
+
+    {/* ✅ History Sections */}
+    {historySections.length > 0 && (
+      <div style={{ marginTop: 40 }}>
+        <Text variant="headingMd" fontWeight="medium">History</Text>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "20px",
+            marginTop: 20,
+          }}
+        >
+          {historySections.map((section, i) => {
+            const popoverActive = cardPopoverActiveIndex === i;
+            return (
+              <div
+                key={i}
+                style={{
+                  width: 220,
+                  border: "1px solid #ddd",
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                  background: "#fff",
+                }}
+              >
+                <div style={{ width: "100%", height: 120, overflow: "hidden" }}>
+                  <img
+                    src={section.imageUrl}
+                    alt={section.sectionHandle}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+
+                <div
+                  style={{
+                    padding: "10px 12px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text fontWeight="medium" variant="bodySm">
+                    {section.sectionHandle.replace(/-/g, " ")}
+                  </Text>
+                  <Icon source={ViewIcon} color="subdued" />
+                </div>
+
+                <div style={{ padding: "0 12px 12px" }}>
+                  <Popover
+                    active={popoverActive}
+                    onClose={closeAllPopovers}
+                    preferredAlignment="left"
+                    sectioned={false}
+                    activator={
+                      <Button
+                        fullWidth
+                        variant="primary"
+                        size="slim"
+                        disabled={addedToThemeIds.includes(section.sectionHandle)}
+                        onClick={() => openCardPopover(i)}
+                        loading={themesLoading && popoverActive}
+                      >
+                        <span
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: "100%",
+                          }}
+                        >
+                          {addedToThemeIds.includes(section.sectionHandle)
+                            ? "Already Added"
+                            : "Add to theme"}
+                          {!addedToThemeIds.includes(section.sectionHandle) && (
+                            <MdOutlineKeyboardArrowDown
+                              style={{ marginLeft: 4, fontSize: 18 }}
+                            />
+                          )}
+                        </span>
+                      </Button>
+                    }
+                  >
+                    <div style={{ minWidth: "160px", maxWidth: "220px" }}>
+                      <ActionList
+                        items={
+                          themesLoading
+                            ? [{ content: "Loading themes..." }]
+                            : themes?.length
+                              ? themeItemsForSection(section)
+                              : [{ content: "No themes found" }]
+                        }
+                      />
+                    </div>
+                  </Popover>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    )}
         <div style={{ marginTop: 40 }}>
           <Text variant="headingMd" fontWeight="medium">
             Quick Guide

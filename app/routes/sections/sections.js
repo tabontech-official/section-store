@@ -169,7 +169,31 @@ export const newestProducts = [
     launchedDate: "2025-01-15",
     lastModified: "2025-02-10",
   },
+    {
+    id: "007",
+    title: "Flip Counter 107",
+    category: "Popular",
+    keywords: ["rehan", "custom", "testimonial", "review","counter"],
+    media:
+      "https://cdn.shopify.com/s/files/1/0654/1210/4348/files/buy_it_now.png",
+    type: "image",
+    price: "Free",
+    details: {
+      "Slider Layout": "Adjust number of visible slides, spacing, and width",
+      Colors: "Change background, text, button, and navigation colors",
+      Button: 'Modify text, link, size, and style of the "View All" button',
+      Typography: "Select custom fonts and adjust sizes for all text elements",
+      Spacing: "Fine-tune padding and margins for the entire section",
+    },
+    code: counterSection,
+    js: newArrival1Javascript,
+    css: newArrival1Css,
+    schema: newArrival1Schema,
 
+    references: ["004"],
+    launchedDate: "2025-01-15",
+    lastModified: "2025-02-10",
+  },
 ];
 
 export const sectionsCatalog = newestProducts.map((item) => ({

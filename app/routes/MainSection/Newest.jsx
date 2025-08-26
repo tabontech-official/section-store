@@ -23,22 +23,22 @@ export default function NewestSlider({ selectedCategory }) {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [addedTitles, setAddedTitles] = useState([]);
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch("/api/store-details");
-        const data = await res.json();
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const res = await fetch("/api/store-details");
+  //       const data = await res.json();
 
-        if (data.success) {
-          console.log(" Shop install callback saved:", data.shop);
-        } else {
-          console.log("⚡ Already exists, skipped:", data.message);
-        }
-      } catch (err) {
-        console.error("❌ Callback trigger failed", err);
-      }
-    })();
-  }, []);
+  //       if (data.success) {
+  //         console.log(" Shop install callback saved:", data.shop);
+  //       } else {
+  //         console.log("⚡ Already exists, skipped:", data.message);
+  //       }
+  //     } catch (err) {
+  //       console.error("❌ Callback trigger failed", err);
+  //     }
+  //   })();
+  // }, []);
   useEffect(() => {
     fetch("/api/fetchaddedSection")
       .then((res) => res.json())
