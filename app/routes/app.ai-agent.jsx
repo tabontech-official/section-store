@@ -23,51 +23,54 @@ export default function ChatGPTPolaris() {
   const [previewData, setPreviewData] = useState(null);
   const [fullPreviewOpen, setFullPreviewOpen] = useState(false);
   const chatEndRef = useRef(null);
-const [addedTitles, setAddedTitles] = useState([]);
-const slugify = (str = "") =>
-  String(str).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const [addedTitles, setAddedTitles] = useState([]);
+  const slugify = (str = "") =>
+    String(str)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
 
-useEffect(() => {
-  fetch("/api/fetchaddedSection")
-    .then((res) => res.json())
-    .then((data) => {
-      const titles = data.map((section) => section.sectionHandle);
-      setAddedTitles(titles);
+  useEffect(() => {
+    fetch("/api/fetchaddedSection")
+      .then((res) => res.json())
+      .then((data) => {
+        const titles = data.map((section) => section.sectionHandle);
+        setAddedTitles(titles);
+      });
+  }, []);
+
+  const handleSave = async () => {
+    const res = await fetch("/api/activeSection", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: previewData?.title,
+        imageUrl: previewData?.media,
+        price: previewData?.price,
+      }),
     });
-}, []);
+    const data = await res.json();
+    if (data.success) {
+      setAddedTitles((prev) => [...prev, slugify(previewData?.title)]);
+      setPreviewOpen(false);
+    }
+  };
 
-const handleSave = async () => {
-  const res = await fetch("/api/activeSection", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      title: previewData?.title,
-      imageUrl: previewData?.media,
-      price: previewData?.price,
-    }),
-  });
-  const data = await res.json();
-  if (data.success) {
-    setAddedTitles((prev) => [...prev, slugify(previewData?.title)]);
-    setPreviewOpen(false);
-  }
-};
-
-const handleSaveSection = async (section) => {
-  const res = await fetch("/api/activeSection", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      title: section.title,
-      imageUrl: section.media,
-      price: section.price,
-    }),
-  });
-  const data = await res.json();
-  if (data.success) {
-    setAddedTitles((prev) => [...prev, slugify(section.title)]);
-  }
-};
+  const handleSaveSection = async (section) => {
+    const res = await fetch("/api/activeSection", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: section.title,
+        imageUrl: section.media,
+        price: section.price,
+      }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      setAddedTitles((prev) => [...prev, slugify(section.title)]);
+    }
+  };
 
   const fetchChatGPTResponse = async (prompt) => {
     const res = await axios.post(
@@ -105,117 +108,100 @@ Don't explain anything — just return keywords like 'testimonial', 'slider', or
     return res.data.choices[0].message.content;
   };
 
- const getRelevantSections = (response) => {
-  const lowerRes = response.toLowerCase();
-  const matched = new Set();
+  const getRelevantSections = (response) => {
+    const lowerRes = response.toLowerCase();
+    const matched = new Set();
 
-  newestProducts.forEach((section) => {
-    if (
-      section.keywords.some((kw) => lowerRes.includes(kw.toLowerCase())) ||
-      lowerRes.includes(section.title.toLowerCase())
-    ) {
-      matched.add(section);
-    }
-  });
+    newestProducts.forEach((section) => {
+      if (
+        section.keywords.some((kw) => lowerRes.includes(kw.toLowerCase())) ||
+        lowerRes.includes(section.title.toLowerCase())
+      ) {
+        matched.add(section);
+      }
+    });
 
-  return Array.from(matched);
-};
+    return Array.from(matched);
+  };
 
   const [isFullPageMode, setIsFullPageMode] = useState(false);
-const [pendingSection, setPendingSection] = useState(null);
-const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
+  const [pendingSection, setPendingSection] = useState(null);
+  const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
 
+  const handleUserInput = async () => {
+    if (!userInput.trim()) return;
 
-const handleUserInput = async () => {
-  if (!userInput.trim()) return;
+    const newMessages = [...messages, { text: userInput, sender: "user" }];
+    setMessages(newMessages);
+    setUserInput("");
 
-  const newMessages = [...messages, { text: userInput, sender: "user" }];
-  setMessages(newMessages);
-  setUserInput("");
+    if (awaitingConfirmation && pendingSection) {
+      if (/yes|ok|sure|ofcourse|okey|okay/i.test(userInput)) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: `Perfect  I’ll create the ${pendingSection.category} section for you.`,
+            sender: "bot",
+          },
+          {
+            text: `Tip: Many merchants also add *Testimonials* or a *Featured Collection* section along with ${pendingSection.category}. Would you like me to suggest those too?`,
+            sender: "bot",
+          },
+        ]);
 
-  if (awaitingConfirmation && pendingSection) {
-    if (/yes|ok|sure|ofcourse|okey|okay/i.test(userInput)) {
+        setMatchedSections([pendingSection]);
+        setAwaitingConfirmation(false);
+        setPendingSection(null);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: "Got it No problem. What kind of section would you like instead?",
+            sender: "bot",
+          },
+        ]);
+        setAwaitingConfirmation(false);
+        setPendingSection(null);
+      }
+      return;
+    }
+
+    const gptReply = await fetchChatGPTResponse(userInput);
+    const matched = getRelevantSections(gptReply);
+
+    if (matched.length === 1) {
+      setPendingSection(matched[0]);
+      setAwaitingConfirmation(true);
       setMessages((prev) => [
         ...prev,
         {
-          text: `Perfect  I’ll create the ${pendingSection.category} section for you.`,
-          sender: "bot"
+          text: `Got it. You’re asking for a **${matched[0].category}** section. Do you want me to generate this for you now?`,
+          sender: "bot",
         },
-        {
-          text: `Tip: Many merchants also add *Testimonials* or a *Featured Collection* section along with ${pendingSection.category}. Would you like me to suggest those too?`,
-          sender: "bot"
-        }
       ]);
-
-      setMatchedSections([pendingSection]);
-      setAwaitingConfirmation(false);
-      setPendingSection(null);
+    } else if (matched.length > 1) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "I found multiple section types that might fit your request  Which one would you like me to generate?",
+          sender: "bot",
+        },
+      ]);
+      setMatchedSections(matched);
     } else {
       setMessages((prev) => [
         ...prev,
         {
-          text: "Got it No problem. What kind of section would you like instead?",
-          sender: "bot"
-        }
+          text: "Hmm  I couldn’t find a matching section. Can you describe it in another way?",
+          sender: "bot",
+        },
       ]);
-      setAwaitingConfirmation(false);
-      setPendingSection(null);
     }
-    return;
-  }
-
-  const gptReply = await fetchChatGPTResponse(userInput);
-  const matched = getRelevantSections(gptReply);
-
-  if (matched.length === 1) {
-    setPendingSection(matched[0]);
-    setAwaitingConfirmation(true);
-    setMessages((prev) => [
-      ...prev,
-      {
-        text: `Got it. You’re asking for a **${matched[0].category}** section. Do you want me to generate this for you now?`,
-        sender: "bot"
-      }
-    ]);
-  } else if (matched.length > 1) {
-    setMessages((prev) => [
-      ...prev,
-      {
-        text: "I found multiple section types that might fit your request  Which one would you like me to generate?",
-        sender: "bot"
-      }
-    ]);
-    setMatchedSections(matched);
-  } else {
-    setMessages((prev) => [
-      ...prev,
-      {
-        text: "Hmm  I couldn’t find a matching section. Can you describe it in another way?",
-        sender: "bot"
-      }
-    ]);
-  }
-};
-
-
+  };
 
   const openPreview = (item) => {
     setPreviewData(item);
     setPreviewOpen(true);
-  };
-
-  const exportPage = (sections) => {
-    const combined = sections
-      .map(
-        (sec, idx) =>
-          `<!-- Section ${idx + 1}: ${sec.title} -->\n{% section '${sec.title
-            .toLowerCase()
-            .replace(/\s+/g, "_")}' %}`,
-      )
-      .join("\n\n");
-
-    navigator.clipboard.writeText(combined);
-    alert("Liquid page copied to clipboard!");
   };
 
   useEffect(() => {
@@ -348,8 +334,7 @@ const handleUserInput = async () => {
 
               <div ref={chatEndRef} />
             </Scrollable>
-
-            {/* Chat Input */}
+            ={" "}
             <div
               style={{
                 padding: "16px",
@@ -377,195 +362,201 @@ const handleUserInput = async () => {
         </Layout.Section>
       </Layout>
 
-  {previewData && (
-  <Modal
-    open={previewOpen}
-    onClose={() => setPreviewOpen(false)}
-    title="Section Preview"
-    primaryAction={{ content: "Close", onAction: () => setPreviewOpen(false) }}
-    size="large"
-  >
-    <Modal.Section>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
-        {/* Left side: Preview image + details */}
-        <div style={{ flex: 1, minWidth: "300px" }}>
-          <Card sectioned>
-            <img
-              src={previewData.media}
-              alt="Preview"
-              style={{
-                width: "100%",
-                maxHeight: "300px",
-                objectFit: "cover",
-                borderRadius: "8px",
-              }}
-            />
-          </Card>
-          <div style={{ marginTop: "20px" }}>
-            <Card sectioned>
-              <Text variant="headingSm" fontWeight="bold">
-                Details:
-              </Text>
-              {Object.entries(previewData.details || {}).map(([key, val], idx) => (
-                <Text
-                  key={idx}
-                  variant="bodyMd"
-                  tone="subdued"
-                  style={{ display: "block", marginTop: 6 }}
-                >
-                  <strong>{key}:</strong> {val}
-                </Text>
-              ))}
-            </Card>
-          </div>
-        </div>
-
-        {/* Right side: Meta info + Add button */}
-        <div style={{ flex: 0.5, minWidth: "300px" }}>
-          <Card>
-            <div
-              style={{
-                padding: "20px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "16px",
-              }}
-            >
-              <Text variant="headingSm" fontWeight="semibold">
-                {previewData?.title}
-              </Text>
-
-              {/* Add button */}
-              <Button
-                fullWidth
-                variant="primary"
-                // icon={CreditCardIcon}
-                disabled={addedTitles.includes(slugify(previewData?.title))}
-                onClick={handleSave}
-              >
-                {addedTitles.includes(slugify(previewData?.title))
-                  ? "Added"
-                  : "Add Section"}
-              </Button>
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "6px",
-                }}
-              >
-                {/* <Icon source={LockIcon} tone="base" /> */}
-                <Text variant="bodySm" tone="subdued">
-                  Secure payment through Shopify
-                </Text>
-              </div>
-
-              <div style={{ borderTop: "1px solid #eee", margin: "6px 0" }} />
-              <Text variant="bodySm">No recurring fees</Text>
-              <Text variant="bodySm">Lifetime access & free updates</Text>
-              <Text variant="bodySm">Works with any Shopify theme</Text>
-              <Text>
-                <strong>Launched:</strong> {previewData.launchedDate}
-              </Text>
-              <Text>
-                <strong>Last Modified:</strong> {previewData.lastModified}
-              </Text>
-            </div>
-          </Card>
-        </div>
-      </div>
-
-      {/* Related Sections */}
-      {previewData.references?.length > 0 && (
-        <div style={{ marginTop: "30px" }}>
-          <Text variant="headingSm" fontWeight="bold">
-            Related Sections
-          </Text>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-              gap: "16px",
-              marginTop: "16px",
-            }}
-          >
-            {newestProducts
-              .filter((p) => previewData.references.includes(p.id))
-              .map((refItem) => (
-                <Card
-                  key={refItem.id}
-                  padding="0"
-                  style={{
-                    borderRadius: "8px",
-                    overflow: "hidden",
-                    border: "1px solid #ddd",
-                  }}
-                >
-                  <div style={{ height: "140px", overflow: "hidden" }}>
-                    {refItem.type === "image" ? (
-                      <img
-                        src={refItem.media}
-                        alt={refItem.title}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    ) : (
-                      <video
-                        src={refItem.media}
-                        muted
-                        autoPlay
-                        loop
-                        playsInline
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    )}
-                  </div>
-                  <div style={{ padding: "12px" }}>
-                    <Text variant="bodySm" fontWeight="medium">
-                      #{refItem.id} - {refItem.title}
+      {previewData && (
+        <Modal
+          open={previewOpen}
+          onClose={() => setPreviewOpen(false)}
+          title="Section Preview"
+          primaryAction={{
+            content: "Close",
+            onAction: () => setPreviewOpen(false),
+          }}
+          size="large"
+        >
+          <Modal.Section>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+              {/* Left side: Preview image + details */}
+              <div style={{ flex: 1, minWidth: "300px" }}>
+                <Card sectioned>
+                  <img
+                    src={previewData.media}
+                    alt="Preview"
+                    style={{
+                      width: "100%",
+                      maxHeight: "300px",
+                      objectFit: "cover",
+                      borderRadius: "8px",
+                    }}
+                  />
+                </Card>
+                <div style={{ marginTop: "20px" }}>
+                  <Card sectioned>
+                    <Text variant="headingSm" fontWeight="bold">
+                      Details:
                     </Text>
+                    {Object.entries(previewData.details || {}).map(
+                      ([key, val], idx) => (
+                        <Text
+                          key={idx}
+                          variant="bodyMd"
+                          tone="subdued"
+                          style={{ display: "block", marginTop: 6 }}
+                        >
+                          <strong>{key}:</strong> {val}
+                        </Text>
+                      ),
+                    )}
+                  </Card>
+                </div>
+              </div>
+              ={" "}
+              <div style={{ flex: 0.5, minWidth: "300px" }}>
+                <Card>
+                  <div
+                    style={{
+                      padding: "20px",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "16px",
+                    }}
+                  >
+                    <Text variant="headingSm" fontWeight="semibold">
+                      {previewData?.title}
+                    </Text>
+                    ={" "}
+                    <Button
+                      fullWidth
+                      variant="primary"
+                      disabled={addedTitles.includes(
+                        slugify(previewData?.title),
+                      )}
+                      onClick={handleSave}
+                    >
+                      {addedTitles.includes(slugify(previewData?.title))
+                        ? "Added"
+                        : "Add Section"}
+                    </Button>
                     <div
                       style={{
-                        marginTop: "8px",
                         display: "flex",
-                        justifyContent: "space-between",
+                        alignItems: "center",
+                        justifyContent: "center",
                         gap: "6px",
                       }}
                     >
-                      <Button size="slim" onClick={() => openPreview(refItem)}>
-                        Preview
-                      </Button>
-                      <Button
-                        size="slim"
-                        variant="primary"
-                        disabled={addedTitles.includes(slugify(refItem.title))}
-                        onClick={() => handleSaveSection(refItem)}
-                      >
-                        {addedTitles.includes(slugify(refItem.title))
-                          ? "Added"
-                          : "Add"}
-                      </Button>
+                      <Text variant="bodySm" tone="subdued">
+                        Secure payment through Shopify
+                      </Text>
                     </div>
+                    <div
+                      style={{ borderTop: "1px solid #eee", margin: "6px 0" }}
+                    />
+                    <Text variant="bodySm">No recurring fees</Text>
+                    <Text variant="bodySm">Lifetime access & free updates</Text>
+                    <Text variant="bodySm">Works with any Shopify theme</Text>
+                    <Text>
+                      <strong>Launched:</strong> {previewData.launchedDate}
+                    </Text>
+                    <Text>
+                      <strong>Last Modified:</strong> {previewData.lastModified}
+                    </Text>
                   </div>
                 </Card>
-              ))}
-          </div>
-        </div>
+              </div>
+            </div>
+
+            {previewData.references?.length > 0 && (
+              <div style={{ marginTop: "30px" }}>
+                <Text variant="headingSm" fontWeight="bold">
+                  Related Sections
+                </Text>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns:
+                      "repeat(auto-fill, minmax(220px, 1fr))",
+                    gap: "16px",
+                    marginTop: "16px",
+                  }}
+                >
+                  {newestProducts
+                    .filter((p) => previewData.references.includes(p.id))
+                    .map((refItem) => (
+                      <Card
+                        key={refItem.id}
+                        padding="0"
+                        style={{
+                          borderRadius: "8px",
+                          overflow: "hidden",
+                          border: "1px solid #ddd",
+                        }}
+                      >
+                        <div style={{ height: "140px", overflow: "hidden" }}>
+                          {refItem.type === "image" ? (
+                            <img
+                              src={refItem.media}
+                              alt={refItem.title}
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                              }}
+                            />
+                          ) : (
+                            <video
+                              src={refItem.media}
+                              muted
+                              autoPlay
+                              loop
+                              playsInline
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                              }}
+                            />
+                          )}
+                        </div>
+                        <div style={{ padding: "12px" }}>
+                          <Text variant="bodySm" fontWeight="medium">
+                            #{refItem.id} - {refItem.title}
+                          </Text>
+                          <div
+                            style={{
+                              marginTop: "8px",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              gap: "6px",
+                            }}
+                          >
+                            <Button
+                              size="slim"
+                              onClick={() => openPreview(refItem)}
+                            >
+                              Preview
+                            </Button>
+                            <Button
+                              size="slim"
+                              variant="primary"
+                              disabled={addedTitles.includes(
+                                slugify(refItem.title),
+                              )}
+                              onClick={() => handleSaveSection(refItem)}
+                            >
+                              {addedTitles.includes(slugify(refItem.title))
+                                ? "Added"
+                                : "Add"}
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                </div>
+              </div>
+            )}
+          </Modal.Section>
+        </Modal>
       )}
-    </Modal.Section>
-  </Modal>
-)}
-
-
 
       <div className="custom-wide-modal-wrapper">
         <style>

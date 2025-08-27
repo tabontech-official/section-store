@@ -68,7 +68,7 @@ export default function HelpCenter() {
 ];
 
 
-      await new Promise((res) => setTimeout(res, 500)); // simulate loading
+      await new Promise((res) => setTimeout(res, 500)); 
       setFaqSections(sampleFaqs);
     };
 

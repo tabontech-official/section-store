@@ -40,8 +40,15 @@ export default function GuideLine() {
   const toggleCollapse = () => setOpenCollapse(!openCollapse);
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate("/app/help/center"); // Navigate to the help center page
+    navigate("/app/help/center"); 
   };
+  const handleRequestClick = () => {
+  window.open(
+    "https://docs.google.com/forms/d/1bV_XuuTn-qoF6WWVr1wEgpO6iC2E6Yrix0HHR4dCiaU/viewform",
+    "_blank"
+  );
+};
+
   return (
     <Frame>
       <Page fullWidth>
@@ -100,7 +107,6 @@ export default function GuideLine() {
                 />
               </MediaCard>
 
-              {/* Collapsible Steps */}
               <div style={{ borderTop: "1px solid #E3E3E3" }}>
                 <button
                   style={{
@@ -167,7 +173,6 @@ export default function GuideLine() {
             <Layout.Section>
               <Card>
                 <div style={{ padding: "16px" }}>
-                  {/* Heading */}
                   <div style={{ marginBottom: "16px" }}>
                     <Text variant="headingMd" fontWeight="bold">
                       Need help?
@@ -201,12 +206,12 @@ export default function GuideLine() {
                       Youtube Tutorials
                     </Button>
 
-                    <Button size="slim" icon={SendIcon}>
+                    <Button size="slim" onClick={handleRequestClick} icon={SendIcon}>
                       Request Section
                     </Button>
-                    <Button size="slim" icon={EmailIcon}>
+                    {/* <Button size="slim" icon={EmailIcon}>
                       Get Support
-                    </Button>
+                    </Button> */}
 
                     <Button size="slim" icon={LiveIcon} onClick={handleClick}>
                       FAQ

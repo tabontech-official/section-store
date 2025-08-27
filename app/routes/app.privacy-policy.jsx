@@ -26,7 +26,6 @@ export default function PrivacyPolicy() {
                 </Text>
                 <Text tone="subdued">Last Updated: {lastUpdated}</Text>
 
-                {/* 1. Introduction */}
                 <section>
                   <Text variant="headingMd" fontWeight="semibold">
                     1. Introduction
@@ -39,7 +38,6 @@ export default function PrivacyPolicy() {
                   </Text>
                 </section>
 
-                {/* 2. Information We Collect */}
                 <section>
                   <Text variant="headingMd" fontWeight="semibold">
                     2. Information We Collect
@@ -75,7 +73,6 @@ export default function PrivacyPolicy() {
                   </BlockStack>
                 </section>
 
-                {/* 3. How We Use Information */}
                 <section>
                   <Text variant="headingMd" fontWeight="semibold">
                     3. How We Use Your Information
@@ -110,7 +107,6 @@ export default function PrivacyPolicy() {
                   </Text>
                 </section>
 
-                {/* 4. Data Sharing */}
                 <section>
                   <Text variant="headingMd" fontWeight="semibold">
                     4. Data Sharing & Third-Party Services
@@ -141,7 +137,6 @@ export default function PrivacyPolicy() {
                   </Text>
                 </section>
 
-                {/* 5. Data Retention */}
                 <section>
                   <Text variant="headingMd" fontWeight="semibold">
                     5. Data Retention
@@ -163,7 +158,6 @@ export default function PrivacyPolicy() {
                   </BlockStack>
                 </section>
 
-                {/* 6. Your Rights */}
                 <section>
                   <Text variant="headingMd" fontWeight="semibold">
                     6. Your Rights
@@ -179,7 +173,6 @@ export default function PrivacyPolicy() {
                   </Text>
                 </section>
 
-                {/* 7. Security */}
                 <section>
                   <Text variant="headingMd" fontWeight="semibold">
                     7. Security
@@ -191,7 +184,6 @@ export default function PrivacyPolicy() {
                   </Text>
                 </section>
 
-                {/* 8. Children */}
                 <section>
                   <Text variant="headingMd" fontWeight="semibold">
                     8. Children’s Privacy
@@ -202,7 +194,6 @@ export default function PrivacyPolicy() {
                   </Text>
                 </section>
 
-                {/* 9. Changes */}
                 <section>
                   <Text variant="headingMd" fontWeight="semibold">
                     9. Changes to This Policy
@@ -213,7 +204,6 @@ export default function PrivacyPolicy() {
                   </Text>
                 </section>
 
-                {/* 10. Contact */}
                 <section>
                   <Text variant="headingMd" fontWeight="semibold">
                     10. Contact Us

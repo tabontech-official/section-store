@@ -7,7 +7,6 @@ export const loader = async ({ request }) => {
     const { session } = await authenticate.admin(request);
     const shop = session.shop;
 
-    // ✅ Fetch all theme sections for this shop
     const sections = await db.themeSection.findMany({
       where: { shop },
       select: {

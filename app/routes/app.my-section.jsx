@@ -50,7 +50,6 @@ export default function SectionDashboard() {
       .then((res) => res.json())
       .then((data) => {
         setAddedSections(data || []);
-        // setAddedToThemeIds(data.map((s) => s.sectionHandle)); // mark already-added
       });
 
     fetch("/api/section-access")
@@ -102,43 +101,6 @@ export default function SectionDashboard() {
     }
   };
 
-  // const handleAddToTheme = async (section, theme) => {
-  //   const res = await fetch("/api/add-to-theme", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({
-  //       sectionTitle: section.sectionHandle,
-  //       imageUrl: section.imageUrl,
-  //       themeId: `gid://shopify/OnlineStoreTheme/${theme?.id}`,
-  //       title: section.title || section.sectionHandle,
-  //       content: section.code,
-  //     }),
-  //   });
-
-  //   const data = await res.json();
-
-  //   if (res.status === 403) {
-  //        setBannerMessage(data.error || "Something went wrong");
-
-  //     setBannerLink("/app/pricing");
-  //     setShowBanner(true);
-  //   } else if (res.status === 409) {
-  //     setBannerMessage("This section is already added to your theme.");
-  //     setBannerLink("");
-  //     setShowBanner(true);
-  //   } else if (data.success) {
-  //     setToastMessage("Section added to theme successfully!");
-  //     setShowToast(true);
-  //     setAddedToThemeIds((prev) => [
-  //       ...new Set([...prev, section.sectionHandle]),
-  //     ]);
-  //   } else {
-  //     setToastMessage("Failed to add section.");
-  //     setShowToast(true);
-  //   }
-
-  //   closeAllPopovers();
-  // };
 
   const handleAddToTheme = async (section, theme) => {
     try {
@@ -185,17 +147,6 @@ export default function SectionDashboard() {
 
     closeAllPopovers();
   };
-
-  // const themeItemsForSection = (section) =>
-  //   (themes || []).map((t) => ({
-  //     content: (
-  //       <InlineStack align="space-between" blockAlign="center">
-  //         <span>{t.name}</span>
-  //         <Badge tone={themeBadgeTone(t.role)}>{t.role}</Badge>
-  //       </InlineStack>
-  //     ),
-  //     onAction: () => handleAddToTheme(section, t),
-  //   }));
 
   const themeItemsForSection = (section) => {
     if (!themes || !themes.length) return [];
@@ -296,7 +247,6 @@ export default function SectionDashboard() {
     );
   };
 
-  // split into today + history
   const todaySections = addedSections.filter((s) => isToday(s.createdAt));
   const historySections = addedSections.filter((s) => !isToday(s.createdAt));
   return (
@@ -402,108 +352,7 @@ export default function SectionDashboard() {
             </div>
           </Popover>
         </div>
-{/* 
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "20px",
-            marginTop: 20,
-          }}
-        >
-          {addedSections.map((section, i) => {
-            const popoverActive = cardPopoverActiveIndex === i;
-            return (
-              <div
-                key={i}
-                style={{
-                  width: 220,
-                  border: "1px solid #ddd",
-                  borderRadius: "10px",
-                  overflow: "hidden",
-                  background: "#fff",
-                }}
-              >
-                <div style={{ width: "100%", height: 120, overflow: "hidden" }}>
-                  <img
-                    src={section.imageUrl}
-                    alt={section.sectionHandle}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
 
-                <div
-                  style={{
-                    padding: "10px 12px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text fontWeight="medium" variant="bodySm">
-                    {section.sectionHandle.replace(/-/g, " ")}
-                  </Text>
-                  <Icon source={ViewIcon} color="subdued" />
-                </div>
-
-                <div style={{ padding: "0 12px 12px" }}>
-                  <Popover
-                    active={popoverActive}
-                    onClose={closeAllPopovers}
-                    preferredAlignment="left"
-                    sectioned={false}
-                    activator={
-                      <Button
-                        fullWidth
-                        variant="primary"
-                        size="slim"
-                        disabled={addedToThemeIds.includes(
-                          section.sectionHandle,
-                        )}
-                        onClick={() => openCardPopover(i)}
-                        loading={themesLoading && popoverActive}
-                      >
-                        <span
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            width: "100%",
-                          }}
-                        >
-                          {addedToThemeIds.includes(section.sectionHandle)
-                            ? "Already Added"
-                            : "Add to theme"}
-                          {!addedToThemeIds.includes(section.sectionHandle) && (
-                            <MdOutlineKeyboardArrowDown
-                              style={{ marginLeft: 4, fontSize: 18 }}
-                            />
-                          )}
-                        </span>
-                      </Button>
-                    }
-                  >
-                    <div style={{ minWidth: "160px", maxWidth: "220px" }}>
-                      <ActionList
-                        items={
-                          themesLoading
-                            ? [{ content: "Loading themes..." }]
-                            : themes?.length
-                              ? themeItemsForSection(section)
-                              : [{ content: "No themes found" }]
-                        }
-                      />
-                    </div>
-                  </Popover>
-                </div>
-              </div>
-            );
-          })}
-        </div> */}
    {todaySections.length > 0 && (
       <div style={{ marginTop: 30 }}>
         <Text variant="headingMd" fontWeight="medium">Today</Text>
@@ -609,7 +458,6 @@ export default function SectionDashboard() {
       </div>
     )}
 
-    {/* ✅ History Sections */}
     {historySections.length > 0 && (
       <div style={{ marginTop: 40 }}>
         <Text variant="headingMd" fontWeight="medium">History</Text>

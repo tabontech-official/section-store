@@ -1,4 +1,3 @@
-// GET /api/themes  -> uses Admin GraphQL query you provided
 import { authenticate } from "../shopify.server";
 
 const THEMES_GQL = `
